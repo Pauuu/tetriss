@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script defer type="module" src="./js/index.js"></script>
+    <title>UwU</title>
+
+    <style>
+        body {
+            background-color: lightblue;
+        }
+
+        div {
+            margin: 10px;
+        }
+
+        .login {
+            display: none;
+
+            position: fixed;
+            top: 45%;
+            right: 45%;
+
+            border-style: solid;
+            border-width: 5px;
+            border-color: blue;
+
+            padding: 30px;
+        }
+
+        #bloques {
+            background-color: fuchsia;
+            width: 20%;
+        }
+
+        #myCanvas {
+            /*background-color: aquamarine;*/
+            border: 1px solid red;
+        }
+
+        #header {
+            background-color: tomato;
+            padding: 10px;
+        }
+
+        #puntuacion {
+            background-color: chartreuse;
+            width: 20%
+        }
+
+        #zona-juego {
+            background-color: blanchedalmond;
+            display: flex;
+            justify-content: center;
+            height: 53em;
+            /*revisar*/
+        }
+    </style>
+</head>
+
+<body>
+    <!--no se mostrara en el jeugo, es solo un test-->
+    <div class="login">
+        <p>user input</p>
+        <p>user password</p>
+    </div>
+
+    <div id="header">
+        header //
+        average fps: <b id="fps"></b>
+    </div>
+
+    <div id="zona-juego">
+
+        <div id="puntuacion">
+            puntuacion
+        </div>
+
+        <div id="divCanvas">
+            <canvas id="myCanvas" width="400" height="800">
+                
+            </canvas>
+        </div>
+
+
+        <div id="bloques">
+            bloques
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
