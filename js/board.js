@@ -8,8 +8,6 @@ export default class Board extends Array {
         //Array of pieces
         this.pieces = [];
 
-        let a = new Piece();
-
         // context of the HTML canvas
         this.ctx = document.getElementById('myCanvas')
             .getContext('2d');

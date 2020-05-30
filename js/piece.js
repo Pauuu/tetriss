@@ -1,7 +1,11 @@
 export default class Piece extends Array {
-    constructor(piece) {
+    constructor(board, pieceType) {
         super(4);
         this._fillThis();
+        this.board = board;
+
+        //type of the piece
+        this.pieceType = pieceType;
 
         // context of the HTML canvas
         this.ctx = document.getElementById('myCanvas')
@@ -20,11 +24,11 @@ export default class Piece extends Array {
      * Draws the blocks of the piece
      */
     drawme() {
-        this.forEach((row, rowIndex) => {
-            row.forEach((col, colIndex) => {
+        this.forEach((arr, rowIndex) => {
+            arr.forEach((block, colIndex) => {
 
                 // si no hay bloque no pinta nada
-                if (this[rowIndex][colIndex] === 0) return; //=== no bloque =>>>
+                if (block === 0) return; //=== no bloque =>>>
 
                 this.ctx.fillRect(
                     (this.pivote.x + colIndex) * 40,
@@ -39,8 +43,10 @@ export default class Piece extends Array {
     /**
      * Moves the piece vertically (+1 on the Y axis)
      */
-    movY(){
+    movY() {
         this.pivote.y++;
+        this._updateBoardPosition();
+
     }
 
     /**
@@ -61,6 +67,10 @@ export default class Piece extends Array {
         }
     }
 
+    /**
+     * Makes a piece shape
+     * @param {*} piece The type of the piece to be displayed
+     */
     _selectPiece(piece) {
 
         const content = [1, 1, 1, 1];
@@ -74,6 +84,52 @@ export default class Piece extends Array {
                     this[1][2]
                 ] = content;
         }
+    }
 
+    /**
+     * Updates the positon of the piece inside the board
+     */
+    _updateBoardPosition() {
+
+        this.forEach((arr, colIndex) => {
+            arr.forEach((block, rowIndex) => {
+
+                if (block === 0) return;
+
+                let absPos = this._getAbsolutePosition(colIndex, rowIndex);
+
+                this.board[absPos.x][absPos.y] = this.pieceType;
+            });
+        });
+
+        // this.__iterateBlocks(() => {
+        //     let absPos = this._getAbsolutePosition(colIndex, rowIndex);
+
+        //     this.board[absPos.x][absPos.y] = this.pieceType;
+        // });
+    }
+
+    /**
+     * Returns an object with the absolute values of the piece's position
+     * @param {*} relativeX 
+     * @param {*} relativeY 
+     */
+    _getAbsolutePosition(relativeX, relativeY) {
+        return {
+            x: this.pivote.x + relativeX,
+            y: this.pivote.y + relativeY
+        }
+    }
+
+    __iterateBlocks(func) {
+        this.forEach((arr, rowIndex) => {
+            arr.forEach((block, colIndex) => {
+
+                // si no hay bloque no pinta nada
+                if (block === 0) return; //===== no bloque =>>>
+
+                func();
+            });
+        });
     }
 }

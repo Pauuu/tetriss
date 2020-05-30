@@ -27,7 +27,7 @@ let avgFps = 0;
         render();
     }
     main(); // Start the cycle
-})()
+})();
 
 /**
  * Updates the elements of the game
