@@ -18,7 +18,7 @@ export default class {
      * the player
      */
     newPiece(pieceType){
-       this.board.newPiece(this.board, pieceType);
+       this.board.newPiece(pieceType);
     }
 
     /**

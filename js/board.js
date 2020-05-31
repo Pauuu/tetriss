@@ -17,7 +17,7 @@ export default class Board extends Array {
     * Creates a new piece
     */
     newPiece(pieceType) {
-        this.pieces.push(new Piece(pieceType));
+        this.pieces.push(new Piece(this, pieceType));
     }
 
     /**

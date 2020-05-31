@@ -41,12 +41,40 @@ export default class Piece extends Array {
     }
 
     /**
+     * Moves the piece horizontally.
+     * @param {*} direction the direction of the piece: 1 -> right; -1 -> left
+     */
+    movX(direction) {
+        this.pivote.x += direction;
+        this.__updateBoardPosition({ x: direction, y: 0 });
+    }
+
+    /**
      * Moves the piece vertically (+1 on the Y axis)
      */
     movY() {
+        // this._deleteLastPosition();
         this.pivote.y++;
-        this._updateBoardPosition();
+        this.__updateBoardPosition({ x: 0, y: 1 });
 
+    }
+
+    __updateBoardPosition(move) {
+        this.forEach((_, rowIndex) => {
+            _.forEach((block, colIndex) => {
+
+                if (block === 0) return;
+
+                let absPos = this._getAbsolutePosition(colIndex, rowIndex);
+
+                // sets to 0 the last tiles occuped by the blocks
+                this.board[absPos.y - move.y][absPos.x - move.x] = 0;
+
+                // sets the tiles occuped by the blocks with the corresponding number
+                // of the piece
+                this.board[absPos.y][absPos.x] = this.pieceType;
+            });
+        });
     }
 
     /**
@@ -80,8 +108,8 @@ export default class Piece extends Array {
                 return [
                     this[0][0],
                     this[0][1],
-                    this[1][1],
-                    this[1][2]
+                    this[0][2],
+                    this[0][3]
                 ] = content;
         }
     }
@@ -91,23 +119,21 @@ export default class Piece extends Array {
      */
     _updateBoardPosition() {
 
-        this.forEach((arr, colIndex) => {
-            arr.forEach((block, rowIndex) => {
+        this.forEach((arr, rowIndex) => {
+            arr.forEach((block, colIndex) => {
 
                 if (block === 0) return;
 
                 let absPos = this._getAbsolutePosition(colIndex, rowIndex);
 
-                this.board[absPos.x][absPos.y] = this.pieceType;
+                this.board[absPos.y][absPos.x] = this.pieceType;
             });
         });
 
-        // this.__iterateBlocks(() => {
-        //     let absPos = this._getAbsolutePosition(colIndex, rowIndex);
-
-        //     this.board[absPos.x][absPos.y] = this.pieceType;
-        // });
     }
+
+
+    // getters & setters
 
     /**
      * Returns an object with the absolute values of the piece's position
