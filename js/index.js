@@ -15,7 +15,7 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 10000;
+    const time = 2000;
 
     game.setUp();
 
@@ -34,8 +34,9 @@ let avgFps = 0;
  */
 function update() {
     
-    game.getBoard.getPieces[0].movX(1);
-    // game.getBoard.getPieces[0].movY();
+    // game.getBoard.getPieces[0].movX(1);
+    game.getBoard.getPieces[0].movY();
+    game.getBoard.getPieces[0].rotate();
     console.table(game.getBoard);
 }
 

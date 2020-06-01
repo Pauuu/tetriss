@@ -41,25 +41,41 @@ export default class Piece extends Array {
     }
 
     /**
+     * Rotates the piece clockwise
+     */
+    rotate() {
+        this._deletPosition();
+        this._reverseCols();
+        this._transposeMatrix();
+        this._updateBoardPosition();
+    }
+
+    /**
      * Moves the piece horizontally.
      * @param {*} direction the direction of the piece: 1 -> right; -1 -> left
      */
     movX(direction) {
+
+        this._deletPosition();
         this.pivote.x += direction;
-        this.__updateBoardPosition({ x: direction, y: 0 });
+        this._updateBoardPosition();
     }
 
     /**
      * Moves the piece vertically (+1 on the Y axis)
      */
     movY() {
-        // this._deleteLastPosition();
-        this.pivote.y++;
-        this.__updateBoardPosition({ x: 0, y: 1 });
 
+        this._deletPosition();
+        this.pivote.y++;
+        this._updateBoardPosition();
     }
 
-    __updateBoardPosition(move) {
+    /**
+     * Deletes the actual position of the matrix
+     */
+    _deletPosition() {
+
         this.forEach((_, rowIndex) => {
             _.forEach((block, colIndex) => {
 
@@ -67,12 +83,8 @@ export default class Piece extends Array {
 
                 let absPos = this._getAbsolutePosition(colIndex, rowIndex);
 
-                // sets to 0 the last tiles occuped by the blocks
-                this.board[absPos.y - move.y][absPos.x - move.x] = 0;
+                this.board[absPos.y][absPos.x] = 0;
 
-                // sets the tiles occuped by the blocks with the corresponding number
-                // of the piece
-                this.board[absPos.y][absPos.x] = this.pieceType;
             });
         });
     }
@@ -96,6 +108,15 @@ export default class Piece extends Array {
     }
 
     /**
+     * Reverses the cols of the matrix
+     */
+    _reverseCols(){
+        this.forEach(arr => {
+            arr.reverse();
+        });
+    }
+
+    /**
      * Makes a piece shape
      * @param {*} piece The type of the piece to be displayed
      */
@@ -115,9 +136,23 @@ export default class Piece extends Array {
     }
 
     /**
+     * Modifies the matrix to transpose it
+     */
+    _transposeMatrix(){
+       
+        for (let row = 0; row < 4; row++) {
+            for (let col = row; col < 4; col++) {
+                [this[row][col], this[col][row]] = [this[col][row], this[row][col]];
+            }
+        }
+    }
+
+
+
+    /**
      * Updates the positon of the piece inside the board
      */
-    _updateBoardPosition() {
+    _updateBoardPosition(move) {
 
         this.forEach((arr, rowIndex) => {
             arr.forEach((block, colIndex) => {
@@ -129,7 +164,6 @@ export default class Piece extends Array {
                 this.board[absPos.y][absPos.x] = this.pieceType;
             });
         });
-
     }
 
 
