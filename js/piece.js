@@ -12,7 +12,7 @@ export default class Piece extends Array {
             .getContext('2d');
 
         // type of piece to be created
-        this._selectPiece(1);
+        this._selectPiece(7);
 
         // pivote: X, Y
         this.pivote = { x: 0, y: 0 };
@@ -166,26 +166,11 @@ export default class Piece extends Array {
         } else {
             console.error("Las unicas direcciones son 1 o -1");
         }
-
-
-        // for (let row = 0; row < this.length; row++) {
-        //     for (let col = 3; col >= 0; col--) {
-
-        //         if (this[row][col] === 0) continue; // sigue con el bucle
-
-        //         let absPos = this._getAbsolutePosition(col, row);
-        //         let block = this.board[absPos.y][absPos.x + direction];
-
-        //         if (block) return true; // =====  hay un bloque ======>>
-
-        //         break;
-
-        //     }
-        // }
-
-        // return false; // ===== no hay un bucle ======>>
     }
 
+    /**
+     * Checks colision when the piece goes from left to right 
+     */
     _rightColision() {
         for (let row = 0; row < this.length; row++) {
             for (let col = this.length - 1; col >= 0; col--) {
@@ -205,6 +190,9 @@ export default class Piece extends Array {
         return false; // ===== no hay un bucle ======>>
     }
 
+    /**
+    * Checks colision when the piece goes from right to left 
+    */
     _leftColision() {
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this.length; col++) {
@@ -330,6 +318,63 @@ export default class Piece extends Array {
                     this[0][2],
                     this[0][3]
                 ] = content;
+
+            case 2: // J piece
+                return [
+                    this[0][1],
+                    this[1][1],
+                    this[2][1],
+                    this[2][0]
+                ] = content;
+
+            case 3: // L piece
+                return [
+                    this[0][0],
+                    this[1][0],
+                    this[2][0],
+                    this[2][1]
+                ] = content;
+
+            case 4: // Z piece
+                return [
+                    this[0][0],
+                    this[0][1],
+                    this[1][1],
+                    this[1][2]
+                ] = content;
+
+            case 5: // S piece
+                return [
+                    this[0][2],
+                    this[0][1],
+                    this[1][1],
+                    this[1][0]
+                ] = content;
+
+            case 5: // S piece
+                return [
+                    this[0][2],
+                    this[0][1],
+                    this[1][1],
+                    this[1][0]
+                ] = content;
+
+            case 6: // O piece
+                return [
+                    this[0][0],
+                    this[0][1],
+                    this[1][0],
+                    this[1][1]
+                ] = content;
+
+            case 7: // S piece
+                return [
+                    this[0][0],
+                    this[0][1],
+                    this[0][2],
+                    this[1][1]
+                ] = content;
+
         }
     }
 

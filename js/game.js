@@ -10,7 +10,7 @@ export default class {
      * I think this ends the game or something...
      */
     setUp(){
-        this.newPiece(1);
+        this.newPiece(2);
     }
 
     /**
