@@ -15,7 +15,7 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 2000;
+    const time = 100;
 
     game.setUp();
 
@@ -33,11 +33,18 @@ let avgFps = 0;
  * Updates the elements of the game
  */
 function update() {
-    
+
+    let direction = 1;
+
+    if (game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
+
+        return;
+    }
+    game.getBoard.getPieces[0].movX(direction);
+
     // game.getBoard.getPieces[0].movX(1);
-    game.getBoard.getPieces[0].movY();
-    game.getBoard.getPieces[0].rotate();
-    console.table(game.getBoard);
+    // game.getBoard.getPieces[0].rotate(1);
+    // console.table(game.getBoard);
 }
 
 /**

@@ -16,8 +16,35 @@ export default class Piece extends Array {
 
         // pivote: X, Y
         this.pivote = { x: 0, y: 0 };
+    }
 
-        console.log(this);
+    /**
+     * Checks if in the adjaccent horizontal axis there's the border or a block
+     * 
+     * Returns true if ther's colision
+     */
+    checkHorizontalColision(direction) {
+
+        if (this._checkWallColision(direction) || this._checkHorizontalBlockColision_(direction)) {
+            console.log("chc: ");
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if there'll be any vertical colision.
+     * 
+     * Returns true if there's colision
+     */
+    checkVerticalColision() {
+        if (this._checkBottomColision() || this._checkVerticalBlockColision()) {
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -43,10 +70,21 @@ export default class Piece extends Array {
     /**
      * Rotates the piece clockwise
      */
-    rotate() {
+    rotate(direction) {
         this._deletPosition();
-        this._reverseCols();
-        this._transposeMatrix();
+
+        if (direction === 1) {
+            this._transposeMatrix();
+            this._reverseCols();
+
+        } else if (direction === -1) {
+            this._reverseCols();
+            this._transposeMatrix();
+        } else {
+            console.error("A ver, a ver, HABER: los unicos valores son"
+                + "1 o -1");
+            return;
+        }
         this._updateBoardPosition();
     }
 
@@ -69,6 +107,166 @@ export default class Piece extends Array {
         this._deletPosition();
         this.pivote.y++;
         this._updateBoardPosition();
+    }
+
+    /**
+     * Checks if below there's the botttom of the board
+     */
+    _checkBottomColision() {
+        let absPos;
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+
+                if (this[col][row] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+
+                // 19 es el largo de la tabla
+                if ((absPos.y + 1) > 19) return true; // ==== hay colisoion ====>>>
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if in there's any colision on the horizontal axis 
+     * @param {*} direction The direccion of the piece
+     */
+    _checkHorizontalBlockColision(direction) {
+        let absPos;
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+                if (this.board[absPos.y][absPos.x + direction]) return true; // ==== hay colisoion ====>>>
+
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if in there's any colision on the horizontal axis 
+     * @param {*} direction The direccion of the piece
+     */
+    _checkHorizontalBlockColision_(direction) {
+
+        if (direction === 1) {
+            return this._rightColision();
+
+        } else if (direction === -1) {
+            return this._leftColision();
+
+        } else {
+            console.error("Las unicas direcciones son 1 o -1");
+        }
+
+
+        // for (let row = 0; row < this.length; row++) {
+        //     for (let col = 3; col >= 0; col--) {
+
+        //         if (this[row][col] === 0) continue; // sigue con el bucle
+
+        //         let absPos = this._getAbsolutePosition(col, row);
+        //         let block = this.board[absPos.y][absPos.x + direction];
+
+        //         if (block) return true; // =====  hay un bloque ======>>
+
+        //         break;
+
+        //     }
+        // }
+
+        // return false; // ===== no hay un bucle ======>>
+    }
+
+    _rightColision() {
+        for (let row = 0; row < this.length; row++) {
+            for (let col = this.length - 1; col >= 0; col--) {
+
+                if (this[row][col] === 0) continue; // sigue con el bucle
+
+                let absPos = this._getAbsolutePosition(col, row);
+                let block = this.board[absPos.y][absPos.x + 1];
+
+                if (block) return true; // =====  hay un bloque ======>>
+
+                break;
+
+            }
+        }
+
+        return false; // ===== no hay un bucle ======>>
+    }
+
+    _leftColision() {
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this.length; col++) {
+
+                if (this[row][col] === 0) continue; // sigue con el bucle
+
+                let absPos = this._getAbsolutePosition(col, row);
+                let block = this.board[absPos.y][absPos.x - 1];
+
+                if (block) return true; // =====  hay un bloque ======>>
+
+                break;
+
+            }
+        }
+
+        return false; // ===== no hay un bucle ======>>
+    }
+
+
+    /**
+     * Checks if below there's a block
+     */
+    _checkVerticalBlockColision() {
+        let absPos;
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+                if (this.board[absPos.y + 1][absPos.x]) return true; // ==== hay colisoion ====>>>
+            }
+        }
+
+        return false;
+    }
+
+
+
+    /**
+     * Checks if there's any colision with the game's walls
+     */
+    _checkWallColision(direction) {
+        let absPos;
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < 4; col++) {
+
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+
+                if (((absPos.x + direction) < 0) || ((absPos.x + direction) > 9)) {
+                    console.log("pared: " + absPos.x);
+                    return true; // ==== hay colisoion ====>>>
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -110,7 +308,7 @@ export default class Piece extends Array {
     /**
      * Reverses the cols of the matrix
      */
-    _reverseCols(){
+    _reverseCols() {
         this.forEach(arr => {
             arr.reverse();
         });
@@ -138,8 +336,8 @@ export default class Piece extends Array {
     /**
      * Modifies the matrix to transpose it
      */
-    _transposeMatrix(){
-       
+    _transposeMatrix() {
+
         for (let row = 0; row < 4; row++) {
             for (let col = row; col < 4; col++) {
                 [this[row][col], this[col][row]] = [this[col][row], this[row][col]];
@@ -147,12 +345,10 @@ export default class Piece extends Array {
         }
     }
 
-
-
     /**
      * Updates the positon of the piece inside the board
      */
-    _updateBoardPosition(move) {
+    _updateBoardPosition() {
 
         this.forEach((arr, rowIndex) => {
             arr.forEach((block, colIndex) => {
