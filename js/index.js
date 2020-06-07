@@ -36,19 +36,16 @@ function update() {
 
     let direction = 1;
 
-    // if (game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
-
-    //     return;
-    // }
-
-    if (game.getBoard.getPieces[0].checkRotationCollision(direction)) {
-
-        return;
+    if (!game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
+        console.log("horizontal colisoin");
+        game.getBoard.getPieces[0].movX(direction);
     }
-    game.getBoard.getPieces[0].movX(direction);
+
+    if (!game.getBoard.getPieces[0].checkRotationCollision(direction)) {
+        game.getBoard.getPieces[0].rotate(-1);
+    }
 
     // game.getBoard.getPieces[0].movX(1);
-    game.getBoard.getPieces[0].rotate(1);
     // console.table(game.getBoard);
 }
 

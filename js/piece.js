@@ -15,10 +15,34 @@ export default class Piece extends Array {
         this._selectPiece(pieceType);
 
         // pivote: X, Y
-        this.pivote = { x: 0, y: 0 };
+        this.pivote = { x: 2, y: 0 };
     }
 
     checkRotationCollision(direction) {
+        this._deletPosition();
+        let a = this._cacaColision(direction);
+        this._revertRotation(direction);
+        
+        return a;
+    }
+
+    _revertRotation(direction) {
+        if (direction === 1) {
+            this._reverseCols();
+            this._transposeMatrix();
+
+        } else if (direction === -1) {
+            this._transposeMatrix();
+            this._reverseCols();
+
+        } else {
+            console.error("A ver, a ver, HABER: los unicos valores son"
+                + "1 o -1");
+            return;
+        }
+    }
+
+    _cacaColision(direction) {
         if (direction === 1) {
             this._transposeMatrix();
             this._reverseCols();
@@ -26,80 +50,30 @@ export default class Piece extends Array {
         } else if (direction === -1) {
             this._reverseCols();
             this._transposeMatrix();
+
         } else {
             console.error("A ver, a ver, HABER: los unicos valores son"
                 + "1 o -1");
             return;
         }
 
-        this._deletPosition();
-        let check = this._a();
-
-        if (check) {
-
-            if (direction === 1) {
-                this._reverseCols();
-                this._transposeMatrix();
-
-            } else {
-                this._transposeMatrix();
-                this._reverseCols();
-            }
-        }
-
-        return check;
-    }
-
-    _a() {
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
+                if (this[row][col] === 0) continue;
+
                 let absPos = this._getAbsolutePosition(col, row);
 
-                if (this[row][col] === 0) continue;
                 if (this.board[absPos.y][absPos.x] !== 0) {
-                    console.log("mira eh");
                     return true;
                 }
 
+                if ((absPos.x < 0 || absPos.x > 9) || (absPos.y > 19)) {
+                    return true;
+                }
             }
         }
 
         return false;
-    }
-
-    _checkIfColision(arr) {
-
-        let absPos;
-        for (let row = 0; row < arr.length; row++) {
-            for (let col = 0; col < arr.length; col++) {
-
-                absPos = this._getAbsolutePosition(col, row);
-
-                if (arr[row][col] === 0) continue;
-                if (this.board[absPos.y][absPos.x] === 0) continue;
-                if ((row === this.pivote.y + col) && (col === this.pivote.x + row)) continue;
-
-                console.log("me cago en todo")
-                return true;
-            }
-
-        }
-
-        return false;
-    }
-
-    _transposeCheck(arr) {
-        for (let row = 0; row < 4; row++) {
-            for (let col = row; col < 4; col++) {
-                [arr[row][col], arr[col][row]] = [arr[col][row], arr[row][col]];
-            }
-        }
-    }
-
-    _reverseColsCheck(arr) {
-        arr.forEach(arr => {
-            arr.reverse();
-        });
     }
 
     /**
@@ -110,7 +84,7 @@ export default class Piece extends Array {
     checkHorizontalColision(direction) {
 
         if (this._checkWallColision(direction) || this._checkHorizontalBlockColision(direction)) {
-           
+
             return true;
         }
 
@@ -216,7 +190,7 @@ export default class Piece extends Array {
 
     /**
      * Checks if in there's any colision on the horizontal axis 
-     * @param {*} direction The direccion of the piece
+     * @param {*} direction The direction of the piece
      */
     _checkHorizontalBlockColision(direction) {
 
@@ -309,7 +283,7 @@ export default class Piece extends Array {
                 absPos = this._getAbsolutePosition(col, row);
 
                 if (((absPos.x + direction) < 0) || ((absPos.x + direction) > 9)) {
-                    console.log("pared: " + absPos.x);
+                    
                     return true; // ==== hay colisoion ====>>>
                 }
             }
