@@ -12,10 +12,94 @@ export default class Piece extends Array {
             .getContext('2d');
 
         // type of piece to be created
-        this._selectPiece(7);
+        this._selectPiece(pieceType);
 
         // pivote: X, Y
         this.pivote = { x: 0, y: 0 };
+    }
+
+    checkRotationCollision(direction) {
+        if (direction === 1) {
+            this._transposeMatrix();
+            this._reverseCols();
+
+        } else if (direction === -1) {
+            this._reverseCols();
+            this._transposeMatrix();
+        } else {
+            console.error("A ver, a ver, HABER: los unicos valores son"
+                + "1 o -1");
+            return;
+        }
+
+        this._deletPosition();
+        let check = this._a();
+
+        if (check) {
+
+            if (direction === 1) {
+                this._reverseCols();
+                this._transposeMatrix();
+
+            } else {
+                this._transposeMatrix();
+                this._reverseCols();
+            }
+        }
+
+        return check;
+    }
+
+    _a() {
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+                let absPos = this._getAbsolutePosition(col, row);
+
+                if (this[row][col] === 0) continue;
+                if (this.board[absPos.y][absPos.x] !== 0) {
+                    console.log("mira eh");
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
+    }
+
+    _checkIfColision(arr) {
+
+        let absPos;
+        for (let row = 0; row < arr.length; row++) {
+            for (let col = 0; col < arr.length; col++) {
+
+                absPos = this._getAbsolutePosition(col, row);
+
+                if (arr[row][col] === 0) continue;
+                if (this.board[absPos.y][absPos.x] === 0) continue;
+                if ((row === this.pivote.y + col) && (col === this.pivote.x + row)) continue;
+
+                console.log("me cago en todo")
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    _transposeCheck(arr) {
+        for (let row = 0; row < 4; row++) {
+            for (let col = row; col < 4; col++) {
+                [arr[row][col], arr[col][row]] = [arr[col][row], arr[row][col]];
+            }
+        }
+    }
+
+    _reverseColsCheck(arr) {
+        arr.forEach(arr => {
+            arr.reverse();
+        });
     }
 
     /**
@@ -25,8 +109,8 @@ export default class Piece extends Array {
      */
     checkHorizontalColision(direction) {
 
-        if (this._checkWallColision(direction) || this._checkHorizontalBlockColision_(direction)) {
-            console.log("chc: ");
+        if (this._checkWallColision(direction) || this._checkHorizontalBlockColision(direction)) {
+           
             return true;
         }
 
@@ -135,27 +219,6 @@ export default class Piece extends Array {
      * @param {*} direction The direccion of the piece
      */
     _checkHorizontalBlockColision(direction) {
-        let absPos;
-
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this[0].length; col++) {
-
-                if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                absPos = this._getAbsolutePosition(col, row);
-                if (this.board[absPos.y][absPos.x + direction]) return true; // ==== hay colisoion ====>>>
-
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if in there's any colision on the horizontal axis 
-     * @param {*} direction The direccion of the piece
-     */
-    _checkHorizontalBlockColision_(direction) {
 
         if (direction === 1) {
             return this._rightColision();
@@ -231,8 +294,6 @@ export default class Piece extends Array {
 
         return false;
     }
-
-
 
     /**
      * Checks if there's any colision with the game's walls
@@ -406,7 +467,6 @@ export default class Piece extends Array {
             });
         });
     }
-
 
     // getters & setters
 

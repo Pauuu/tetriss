@@ -15,7 +15,7 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 100;
+    const time = 1000;
 
     game.setUp();
 
@@ -36,14 +36,19 @@ function update() {
 
     let direction = 1;
 
-    if (game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
+    // if (game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
+
+    //     return;
+    // }
+
+    if (game.getBoard.getPieces[0].checkRotationCollision(direction)) {
 
         return;
     }
     game.getBoard.getPieces[0].movX(direction);
 
     // game.getBoard.getPieces[0].movX(1);
-    // game.getBoard.getPieces[0].rotate(1);
+    game.getBoard.getPieces[0].rotate(1);
     // console.table(game.getBoard);
 }
 
