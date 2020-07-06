@@ -10,12 +10,14 @@ let currTime = new Date().getTime();
 let snapTime = 0;
 let avgFps = 0;
 
+var __indicador__ = 0;
+
 /**
  * Main loop
  */
 ; (function () {
 
-    const time = 1000;
+    const time = 200;
 
     game.setUp();
 
@@ -34,20 +36,55 @@ let avgFps = 0;
  */
 function update() {
 
+
     let direction = 1;
 
-    if (!game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
-        console.log("horizontal colisoin");
-        game.getBoard.getPieces[0].movX(direction);
+    console.table(game.getBoard.getPieces[0]);
+    console.log("hola");
+    console.table((game.getBoard.getPieces[0])[0][1]);
+
+    if (__indicador__ === 0) {
+        if (!game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
+            console.log("no hay horizontal colisoin");
+            game.getBoard.getPieces[0].movX(direction);
+        }
+
+        // else {
+        //     /** mira si puede hacer un wallkick (wk !== 0), 
+        //     * y si lo puede hacer mueve toda la puieza todo el valor dado */
+        //     let wallKickDir = !game.getBoard.getPieces[0]._checkWallKick(direction);
+
+        //     if (wallKickDir) {
+
+        //         game.getBoard.getPieces[0].wallKick(wallKickDir);
+        //         game.getBoard.getPieces[0].rotate(direction);
+        //     }
+        __indicador__ = 1;
+        // }
     }
 
-    if (!game.getBoard.getPieces[0].checkRotationCollision(direction)) {
-        game.getBoard.getPieces[0].rotate(-1);
-    }
+    else {
+        if (!game.getBoard.getPieces[0].checkRotationCollision(direction)) {
+            game.getBoard.getPieces[0].rotate(direction);
+        }
 
-    // game.getBoard.getPieces[0].movX(1);
-    // console.table(game.getBoard);
+        else {
+            let wallKickDir = game.getBoard.getPieces[0]._checkWallKick(direction);
+            console.log("wallkcik " + wallKickDir);
+
+            if (wallKickDir !== 0) {
+                game.getBoard.getPieces[0].rotate(direction);
+                game.getBoard.getPieces[0].wallKick(wallKickDir);
+            }
+
+        }
+        __indicador__ = 0;
+
+        // game.getBoard.getPieces[0].movX(1);
+        // console.table(game.getBoard);
+    }
 }
+
 
 /**
  * Renders all the elements of the game

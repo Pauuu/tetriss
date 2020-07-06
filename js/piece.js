@@ -15,23 +15,23 @@ export default class Piece extends Array {
         this._selectPiece(pieceType);
 
         // pivote: X, Y
-        this.pivote = { x: 2, y: 0 };
+        this.pivote = { x: 6, y: 0 };
     }
 
     checkRotationCollision(direction) {
         this._deletPosition();
-        let a = this._cacaColision(direction);
+        let a = this._cacaRotationColision(direction);
         this._revertRotation(direction);
-        
+
         return a;
     }
 
     _revertRotation(direction) {
-        if (direction === 1) {
+        if ((direction === 1) || (direction === 2)) {
             this._reverseCols();
             this._transposeMatrix();
 
-        } else if (direction === -1) {
+        } else if ((direction === -1) || (direction === -2)) {
             this._transposeMatrix();
             this._reverseCols();
 
@@ -42,7 +42,7 @@ export default class Piece extends Array {
         }
     }
 
-    _cacaColision(direction) {
+    _cacaRotationColision(direction) {
         if (direction === 1) {
             this._transposeMatrix();
             this._reverseCols();
@@ -59,15 +59,17 @@ export default class Piece extends Array {
 
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
-                if (this[row][col] === 0) continue;
+                if (this[col][row] === 0) continue;
 
                 let absPos = this._getAbsolutePosition(col, row);
 
+                // comprueba si no esta vacio el espacio
                 if (this.board[absPos.y][absPos.x] !== 0) {
                     return true;
                 }
 
-                if ((absPos.x < 0 || absPos.x > 9) || (absPos.y > 19)) {
+                // comprueba si hay o no una pared
+                if ((absPos.x < 0) || (absPos.x > 9) || (absPos.y > 19)) {
                     return true;
                 }
             }
@@ -106,9 +108,109 @@ export default class Piece extends Array {
     }
 
     /**
+     * Checks the wallKick.
+     * 
+     * 1 -> clockwise
+     * 
+     * -1 -> counter-clockwise
+     */
+    _checkWallKick(direction) {
+        // derecha
+        let absPos;
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+
+                if (this[col][row] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+            }
+        }
+
+
+        this._deletPosition();
+
+        if ((direction === 1) || (direction === 2)) {
+            this._transposeMatrix();
+            this._reverseCols();
+
+
+
+        } else if ((direction === -1) || (direction === -2)) {
+            this._reverseCols();
+            this._transposeMatrix();
+
+        } else {
+            console.error("A ver, a ver, HABER: los unicos valores son"
+                + "1 o -1");
+            return;
+        }
+
+        console.log(this);
+
+        if ((direction === 1) || (direction === 2)) {
+
+            for (let row = 0; row < this.length; row++) {
+                for (let col = 0; col < this[0].length; col++) {
+
+                    if (this[col][row] === 0) continue; //=== no bloque =>>>
+
+                    absPos = this._getAbsolutePosition(col, row);
+
+                    if ((this.board[absPos.y][absPos.x - direction]) !== 0) {
+
+                        if (direction === 1) {
+                            this._revertRotation(direction);
+                            return this._checkWallKick(2);
+                        }
+
+                        else {
+                            this._revertRotation(direction);
+                            return 0
+                        }
+                    }
+                }
+            }
+
+            this._revertRotation(direction);
+            return direction;
+        }
+
+        else {
+
+            for (let row = 0; row < this.length; row++) {
+                for (let col = 0; col < this[0].length; col++) {
+
+                    if (this[col][row] === 0) continue; //=== no bloque =>>>
+
+                    absPos = this._getAbsolutePosition(col, row);
+
+                    if ((absPos.x + direction) !== 0) {
+                        if (direction === -1) {
+
+                            this._revertRotation(direction);
+                            return this._checkWallKick(-2);
+                        } else {
+
+                            this._revertRotation(direction);
+                            return 0
+                        }
+                    }
+
+                    this._revertRotation(direction);
+                    return direction;
+                }
+            }
+        }
+
+        this._revertRotation(direction);
+        return 0;
+    }
+
+    /**
      * Draws the blocks of the piece
      */
     drawme() {
+
         this.forEach((arr, rowIndex) => {
             arr.forEach((block, colIndex) => {
 
@@ -123,6 +225,8 @@ export default class Piece extends Array {
 
             });
         });
+
+        this.ctx.fillStyle = "#000000";
     }
 
     /**
@@ -152,6 +256,18 @@ export default class Piece extends Array {
      */
     movX(direction) {
 
+        let absPos;
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+
+                if (this[col][row] === 0) continue; //=== no bloque =>>>
+
+                absPos = this._getAbsolutePosition(col, row);
+            }
+        }
+
+
         this._deletPosition();
         this.pivote.x += direction;
         this._updateBoardPosition();
@@ -165,6 +281,23 @@ export default class Piece extends Array {
         this._deletPosition();
         this.pivote.y++;
         this._updateBoardPosition();
+    }
+
+    /**
+     * Mueve la pieza para poder hacer un wallkick.
+     * Mira hacia donde ha rotado, y luego mueve la pieza hacia una direccion u
+     * otra una o dos posiciones
+     * 
+     * TODO: OJO con la pieza O
+     * @param {int} direccion direccion a donde va la pieza.
+     * 
+     * direccion = 1,2 -> horario 
+     * 
+     * direccion = -1,-2 -> contrahorario
+     */
+    wallKick(direction) {
+        // TODO: comprobar si basta con mover una vez a un lado o no.
+        this.movX(direction);
     }
 
     /**
@@ -283,7 +416,7 @@ export default class Piece extends Array {
                 absPos = this._getAbsolutePosition(col, row);
 
                 if (((absPos.x + direction) < 0) || ((absPos.x + direction) > 9)) {
-                    
+
                     return true; // ==== hay colisoion ====>>>
                 }
             }
@@ -326,6 +459,10 @@ export default class Piece extends Array {
                 this[i][j] = 0;
             }
         }
+
+        console.log(this);
+        console.log(this.length);
+
     }
 
     /**
