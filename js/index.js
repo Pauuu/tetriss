@@ -39,46 +39,10 @@ function update() {
 
     let direction = 1;
 
-    if (__indicador__ === 0) {
-        if (!game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
-            console.log("no hay horizontal colisoin");
-            game.getBoard.getPieces[0].movX(direction);
-        }
-
-        // else {
-        //     /** mira si puede hacer un wallkick (wk !== 0), 
-        //     * y si lo puede hacer mueve toda la puieza todo el valor dado */
-        //     let wallKickDir = !game.getBoard.getPieces[0]._checkWallKick(direction);
-
-        //     if (wallKickDir) {
-
-        //         game.getBoard.getPieces[0].wallKick(wallKickDir);
-        //         game.getBoard.getPieces[0].rotate(direction);
-        //     }
-        __indicador__ = 1;
-        // }
+    if (game.getBoard.getPieces[0].checkVerticalColision()){
+        game.getBoard.getPieces[0].movY();
     }
 
-    else {
-        if (!game.getBoard.getPieces[0].checkRotationCollision(direction)) {
-            game.getBoard.getPieces[0].rotate(direction);
-        }
-
-        else {
-            let wallKickDir = game.getBoard.getPieces[0]._checkWallKick(direction);
-            console.log("wallkcik " + wallKickDir);
-
-            if (wallKickDir !== 0) {
-                game.getBoard.getPieces[0].rotate(direction);
-                game.getBoard.getPieces[0].wallKick(wallKickDir);
-            }
-
-        }
-        __indicador__ = 0;
-
-        // game.getBoard.getPieces[0].movX(1);
-        // console.table(game.getBoard);
-    }
 }
 
 
