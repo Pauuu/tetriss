@@ -15,7 +15,7 @@ export default class Piece extends Array {
         this._selectPiece(pieceType);
 
         // pivote: X, Y
-        this.pivote = { x: 6, y: 0 };
+        this.pivote = { col: 2, row: 0 };
     }
 
     checkRotationCollision(direction) {
@@ -59,17 +59,17 @@ export default class Piece extends Array {
 
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
-                if (this[col][row] === 0) continue;
+                if (this[row][col] === 0) continue;
 
-                let absPos = this._getAbsolutePosition(col, row);
+                let absPos = this._getAbsolutePosition(row, col);
 
                 // comprueba si no esta vacio el espacio
-                if (this.board[absPos.y][absPos.x] !== 0) {
+                if (this.board[absPos.row][absPos.col] !== 0) {
                     return true;
                 }
 
                 // comprueba si hay o no una pared
-                if ((absPos.x < 0) || (absPos.x > 9) || (absPos.y > 19)) {
+                if ((absPos.col < 0) || (absPos.col > 9) || (absPos.row > 19)) {
                     return true;
                 }
             }
@@ -120,12 +120,11 @@ export default class Piece extends Array {
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
 
-                if (this[col][row] === 0) continue; //=== no bloque =>>>
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                absPos = this._getAbsolutePosition(col, row);
+                absPos = this._getAbsolutePosition(row, col);
             }
         }
-
 
         this._deletPosition();
 
@@ -145,18 +144,21 @@ export default class Piece extends Array {
             return;
         }
 
-        console.log(this);
-
         if ((direction === 1) || (direction === 2)) {
 
             for (let row = 0; row < this.length; row++) {
                 for (let col = 0; col < this[0].length; col++) {
 
-                    if (this[col][row] === 0) continue; //=== no bloque =>>>
+                    if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                    absPos = this._getAbsolutePosition(col, row);
+                    absPos = this._getAbsolutePosition(row, col);
 
-                    if ((this.board[absPos.y][absPos.x - direction]) !== 0) {
+                    console.log({
+                        resutladoResta:
+                            this.board[absPos.row][absPos.col - direction]
+                    });
+
+                    if ((this.board[absPos.row][absPos.col - direction]) !== 0) {
 
                         if (direction === 1) {
                             this._revertRotation(direction);
@@ -180,11 +182,11 @@ export default class Piece extends Array {
             for (let row = 0; row < this.length; row++) {
                 for (let col = 0; col < this[0].length; col++) {
 
-                    if (this[col][row] === 0) continue; //=== no bloque =>>>
+                    if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                    absPos = this._getAbsolutePosition(col, row);
+                    absPos = this._getAbsolutePosition(row, col);
 
-                    if ((absPos.x + direction) !== 0) {
+                    if ((absPos.col + direction) !== 0) {
                         if (direction === -1) {
 
                             this._revertRotation(direction);
@@ -218,8 +220,8 @@ export default class Piece extends Array {
                 if (block === 0) return; //=== no bloque =>>>
 
                 this.ctx.fillRect(
-                    (this.pivote.x + colIndex) * 40,
-                    (this.pivote.y + rowIndex) * 40,
+                    (this.pivote.col + colIndex) * 40,
+                    (this.pivote.row + rowIndex) * 40,
                     40,
                     40);
 
@@ -261,15 +263,15 @@ export default class Piece extends Array {
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
 
-                if (this[col][row] === 0) continue; //=== no bloque =>>>
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                absPos = this._getAbsolutePosition(col, row);
+                absPos = this._getAbsolutePosition(row, col);
             }
         }
 
 
         this._deletPosition();
-        this.pivote.x += direction;
+        this.pivote.col += direction;
         this._updateBoardPosition();
     }
 
@@ -279,7 +281,7 @@ export default class Piece extends Array {
     movY() {
 
         this._deletPosition();
-        this.pivote.y++;
+        this.pivote.row++;
         this._updateBoardPosition();
     }
 
@@ -297,7 +299,7 @@ export default class Piece extends Array {
      */
     wallKick(direction) {
         // TODO: comprobar si basta con mover una vez a un lado o no.
-        this.movX(direction);
+        this.movX(-direction);
     }
 
     /**
@@ -309,12 +311,12 @@ export default class Piece extends Array {
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
 
-                if (this[col][row] === 0) continue; //=== no bloque =>>>
+                if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                absPos = this._getAbsolutePosition(col, row);
+                absPos = this._getAbsolutePosition(row, col);
 
                 // 19 es el largo de la tabla
-                if ((absPos.y + 1) > 19) return true; // ==== hay colisoion ====>>>
+                if ((absPos.row + 1) > 19) return true; // ==== hay colisoion ====>>>
             }
         }
 
@@ -347,8 +349,8 @@ export default class Piece extends Array {
 
                 if (this[row][col] === 0) continue; // sigue con el bucle
 
-                let absPos = this._getAbsolutePosition(col, row);
-                let block = this.board[absPos.y][absPos.x + 1];
+                let absPos = this._getAbsolutePosition(row, col);
+                let block = this.board[absPos.row][absPos.col + 1];
 
                 if (block) return true; // =====  hay un bloque ======>>
 
@@ -369,8 +371,8 @@ export default class Piece extends Array {
 
                 if (this[row][col] === 0) continue; // sigue con el bucle
 
-                let absPos = this._getAbsolutePosition(col, row);
-                let block = this.board[absPos.y][absPos.x - 1];
+                let absPos = this._getAbsolutePosition(row, col);
+                let block = this.board[absPos.row][absPos.col - 1];
 
                 if (block) return true; // =====  hay un bloque ======>>
 
@@ -394,8 +396,8 @@ export default class Piece extends Array {
 
                 if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                absPos = this._getAbsolutePosition(col, row);
-                if (this.board[absPos.y + 1][absPos.x]) return true; // ==== hay colisoion ====>>>
+                absPos = this._getAbsolutePosition(row, col);
+                if (this.board[absPos.row + 1][absPos.col]) return true; // ==== hay colisoion ====>>>
             }
         }
 
@@ -413,9 +415,9 @@ export default class Piece extends Array {
 
                 if (this[row][col] === 0) continue; //=== no bloque =>>>
 
-                absPos = this._getAbsolutePosition(col, row);
+                absPos = this._getAbsolutePosition(row, col);
 
-                if (((absPos.x + direction) < 0) || ((absPos.x + direction) > 9)) {
+                if (((absPos.col + direction) < 0) || ((absPos.col + direction) > 9)) {
 
                     return true; // ==== hay colisoion ====>>>
                 }
@@ -433,11 +435,15 @@ export default class Piece extends Array {
         this.forEach((_, rowIndex) => {
             _.forEach((block, colIndex) => {
 
+                /**
+                *  checks if there's a block on the piece, 
+                *  because if not cheked, it might delete a block of another piece
+                */
                 if (block === 0) return;
 
-                let absPos = this._getAbsolutePosition(colIndex, rowIndex);
+                let absPos = this._getAbsolutePosition(rowIndex, colIndex);
 
-                this.board[absPos.y][absPos.x] = 0;
+                this.board[absPos.row][absPos.col] = 0;
 
             });
         });
@@ -452,17 +458,13 @@ export default class Piece extends Array {
     */
     _fillThis() {
 
-        for (let i = 0; i < this.length; i++) {
-            this[i] = [];
+        for (let row = 0; row < this.length; row++) {
+            this[row] = [];
 
-            for (let j = 0; j < 4; j++) {
-                this[i][j] = 0;
+            for (let newCol = 0; newCol < 4; newCol++) {
+                this[row][newCol] = 0;
             }
         }
-
-        console.log(this);
-        console.log(this.length);
-
     }
 
     /**
@@ -572,9 +574,9 @@ export default class Piece extends Array {
 
                 if (block === 0) return;
 
-                let absPos = this._getAbsolutePosition(colIndex, rowIndex);
+                let absPos = this._getAbsolutePosition(rowIndex, colIndex);
 
-                this.board[absPos.y][absPos.x] = this.pieceType;
+                this.board[absPos.row][absPos.col] = this.pieceType;
             });
         });
     }
@@ -583,13 +585,13 @@ export default class Piece extends Array {
 
     /**
      * Returns an object with the absolute values of the piece's position
-     * @param {*} relativeX 
-     * @param {*} relativeY 
+     * @param {*} relativeCol 
+     * @param {*} relativeRow 
      */
-    _getAbsolutePosition(relativeX, relativeY) {
+    _getAbsolutePosition(relativeRow, relativeCol) {
         return {
-            x: this.pivote.x + relativeX,
-            y: this.pivote.y + relativeY
+            row: this.pivote.row + relativeRow,
+            col: this.pivote.col + relativeCol
         }
     }
 

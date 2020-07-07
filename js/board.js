@@ -68,11 +68,11 @@ export default class Board extends Array {
     */
     _fillThis() {
 
-        for (let i = 0; i < this.length; i++) {
-            this[i] = [];
+        for (let row = 0; row < this.length; row++) {
+            this[row] = [];
 
-            for (let j = 0; j < 10; j++) {
-                this[i][j] = 0;
+            for (let newCol = 0; newCol < 10; newCol++) {
+                this[row][newCol] = 0;
             }
         }
     }

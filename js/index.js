@@ -39,10 +39,6 @@ function update() {
 
     let direction = 1;
 
-    console.table(game.getBoard.getPieces[0]);
-    console.log("hola");
-    console.table((game.getBoard.getPieces[0])[0][1]);
-
     if (__indicador__ === 0) {
         if (!game.getBoard.getPieces[0].checkHorizontalColision(direction)) {
             console.log("no hay horizontal colisoin");
