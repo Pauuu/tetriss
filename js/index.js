@@ -39,10 +39,12 @@ function update() {
 
     let direction = 1;
 
-    if (game.getBoard.getPieces[0].checkVerticalColision()){
-        game.getBoard.getPieces[0].movY();
+    if (game.getBoard.getPieces[game.getBoard.getLastPieceIndex].checkVerticalColision()){
+        game.getBoard.getPieces[game.getBoard.getLastPieceIndex].movY();
+    } 
+    else {
+        game.newPiece(2);
     }
-
 }
 
 

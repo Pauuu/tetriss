@@ -80,4 +80,8 @@ export default class Board extends Array {
     get getPieces() {
         return this.pieces;
     }
+
+    get getLastPieceIndex() {
+        return this.pieces.length - 1;
+    }
 }
