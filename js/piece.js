@@ -18,6 +18,28 @@ export default class Piece extends Array {
         this.pivote = { col: 2, row: 0 };
     }
 
+    /**
+    * Checks the colision on the right side
+    */
+    checkRightColision() {
+        let block = false; // booleano que comprueba si hay un bloque en la columna
+        let absPos;        // tendra los valores absolutos del bloque
+
+        for (let col = 3; col >= 0; col--) {
+            if (block) return true; //==== todos los bloques han sido testeados y ninguno ha chocado con nada ====>>>>
+
+            for (let row = 0; row < 4; row++) {
+
+                if (this[row][col] === 0) continue; //==== no hay bloque que comprobar ====>>> 
+
+                block = true;   //==== hay un bloque en la columna ====>>>>
+                absPos = this._getAbsolutePosition(row, col);
+
+                if (this.board[absPos.row][++absPos.col] !== 0) return false; //==== un bloque ha chocado con algo ====>>
+            }
+        }
+    }
+
     checkRotationCollision(direction) {
         this._deletPosition();
         let a = this._testRotationColision(direction);
@@ -26,7 +48,85 @@ export default class Piece extends Array {
         return a;
     }
 
-    _testRotationColision(direction) {
+    /**
+     * Checks the colision on the right side
+     */
+    checkLeftColision() {
+        let block = false; // booleano que comprueba si hay un bloque en la columna
+        let absPos;        // tendra los valores absolutos del bloque
+
+        for (let col = 0; col < 3; col++) {
+            if (block) return true; //==== todos los bloques han sido testeados y ninguno ha chocado con nada ====>>>>
+
+            for (let row = 0; row < 3; row++) {
+
+                if (this[row][col] === 0) continue; //==== no hay bloque que comprobar ====>>> 
+
+                block = true;   //==== hay un bloque en la columna ====>>>>
+                absPos = this._getAbsolutePosition(row, col);
+
+                if (this.board[absPos.row][--absPos.col] !== 0) return false; //==== un bloque ha chocado con algo ====>>
+            }
+        }
+    }
+
+    /**
+     * Checks if there'll be any vertical colision.
+     * 
+     * Returns true if there's colision; false if there's not
+     */
+    checkVerticalColision() {
+
+        let block = false;
+        let absPos;
+
+        // comprueba si ha tocado el fondo del tablero
+        if (this._checkBottomColision()) return false;
+
+        for (let row = 3; row >= 0; row--) {
+            if (block) return true; //==== hay algun bloque en la fila ====>>>>
+
+            for (let col = 0; col < 4; col++) {
+
+                if (this[row][col] === 0) continue; //==== no bloque ========>>>
+
+                block = true; //==== ha encontrado un bloque =====>>>>>
+                absPos = this._getAbsolutePosition(row, col);
+
+                if (this.board[absPos.row + 1][absPos.col] !== 0) return false; //==== abajo no hay un espacio libre
+            }
+        }
+
+        return "alguien se ha comido todos los bloques y no ha puesto un mensaje de err descriptivo OwO";   //===== err =======>>>>
+    }
+
+    /**
+     * Draws the blocks of the piece
+     */
+    drawme() {
+
+        this.forEach((arr, rowIndex) => {
+            arr.forEach((block, colIndex) => {
+
+                // si no hay bloque no pinta nada
+                if (block === 0) return; //=== no bloque =>>>
+
+                this.ctx.fillRect(
+                    (this.pivote.col + colIndex) * 40,
+                    (this.pivote.row + rowIndex) * 40,
+                    40,
+                    40);
+
+            });
+        });
+    }
+
+    /**
+     * Rotates the piece clockwise
+     */
+    rotate(direction) {
+        this._deletPosition();
+
         if (direction === 1) {
             this._transposeMatrix();
             this._reverseCols();
@@ -34,81 +134,75 @@ export default class Piece extends Array {
         } else if (direction === -1) {
             this._reverseCols();
             this._transposeMatrix();
-
         } else {
             console.error("A ver, a ver, HABER: los unicos valores son"
                 + "1 o -1");
             return;
         }
-
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this[0].length; col++) {
-                if (this[row][col] === 0) continue;
-
-                let absPos = this._getAbsolutePosition(row, col);
-
-                // comprueba si no esta vacio el espacio
-                if (this.board[absPos.row][absPos.col] !== 0) {
-                    return true;
-                }
-
-                // comprueba si hay o no una pared
-                if ((absPos.col < 0) || (absPos.col > 9) || (absPos.row > 19)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        this._updateBoardPosition();
     }
 
     /**
-     * Checks if in the adjaccent horizontal axis there's the border or a block
-     * 
-     * Returns true if ther's colision
+     * Moves the piece horizontally.
+     * @param {*} direction the direction of the piece: 1 -> right; -1 -> left
      */
-    checkHorizontalColision(direction) {
+    movX(direction) {
 
-        if (this._checkWallColision(direction) || this._checkHorizontalBlockColision(direction)) {
-
-            return true;
-        }
-
-        return false;
+        this._deletPosition();
+        this.pivote.col += direction;
+        this._updateBoardPosition();
     }
 
     /**
-     * Checks if there'll be any vertical colision.
-     * 
-     * Returns true if there's colision
+     * Moves the piece vertically (+1 on the Y axis)
      */
-    checkVerticalColision() {
+    movY() {
+
+        this._deletPosition();
+        this.pivote.row++;
+        this._updateBoardPosition();
+    }
+
+    /**
+     * Mueve la pieza para poder hacer un wallkick.
+     * Mira hacia donde ha rotado, y luego mueve la pieza hacia una direccion u
+     * otra una o dos posiciones
+     * 
+     * TODO: OJO con la pieza O
+     * @param {int} direccion direccion a donde va la pieza.
+     * 
+     * direccion = 1,2 -> horario 
+     * 
+     * direccion = -1,-2 -> contrahorario
+     */
+    wallKick(direction) {
+        // TODO: comprobar si basta con mover una vez a un lado o no.
+        this.movX(-direction);
+    }
+
+    /**
+     * Checks if the block is at the bottom of the board.
+     * 
+     * returns true if there's at the bottom; false if there's not
+     */
+    _checkBottomColision() {
+
+        let block = false;
         let absPos;
 
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this[0].length; col++) {
+        for (let row = 3; row >= 0; row--) {
 
-                if (this[row][col] === 0) continue; //==== no bloque ========>>>
+            if (block) return false; // ==== se han comprobado todos los bloques de abajo ====>>>
+            for (let col = 0; col < 4; col ++){
 
+                if (this[row][col] === 0) continue;
+
+                block = true;
                 absPos = this._getAbsolutePosition(row, col);
 
-                // si ha llegado al fondo del todo
-                if ((absPos.row + 1) > 19) return false; 
-
-                if (this._isSameBlock(absPos.row + 1, absPos.col)) continue;
-
-                // si la siguiente posicion no esta vacia
-                if ((this.board[absPos.row + 1][absPos.col]) !== 0) {
-
-                    // comprobar si pertenece a la misma pieza o no
-                    if (!this._isSameBlock(absPos.row + 1, absPos.col)) {
-                        
-                        return false; // ==== hay colisoion ====>>>
-                    }
-                }
+                if (absPos.row === 19) return true; //==== un bloque esta eb el fondo =====>>
             }
         }
-        return true;   //===== no hay colision =======>>>>
     }
 
     /**
@@ -213,145 +307,6 @@ export default class Piece extends Array {
     }
 
     /**
-     * Draws the blocks of the piece
-     */
-    drawme() {
-
-        this.forEach((arr, rowIndex) => {
-            arr.forEach((block, colIndex) => {
-
-                // si no hay bloque no pinta nada
-                if (block === 0) return; //=== no bloque =>>>
-
-                this.ctx.fillRect(
-                    (this.pivote.col + colIndex) * 40,
-                    (this.pivote.row + rowIndex) * 40,
-                    40,
-                    40);
-
-            });
-        });
-    }
-
-    /**
-     * Rotates the piece clockwise
-     */
-    rotate(direction) {
-        this._deletPosition();
-
-        if (direction === 1) {
-            this._transposeMatrix();
-            this._reverseCols();
-
-        } else if (direction === -1) {
-            this._reverseCols();
-            this._transposeMatrix();
-        } else {
-            console.error("A ver, a ver, HABER: los unicos valores son"
-                + "1 o -1");
-            return;
-        }
-        this._updateBoardPosition();
-    }
-
-    /**
-     * Moves the piece horizontally.
-     * @param {*} direction the direction of the piece: 1 -> right; -1 -> left
-     */
-    movX(direction) {
-
-        this._deletPosition();
-        this.pivote.col += direction;
-        this._updateBoardPosition();
-    }
-
-    /**
-     * Moves the piece vertically (+1 on the Y axis)
-     */
-    movY() {
-
-        this._deletPosition();
-        this.pivote.row++;
-        this._updateBoardPosition();
-    }
-
-    /**
-     * Mueve la pieza para poder hacer un wallkick.
-     * Mira hacia donde ha rotado, y luego mueve la pieza hacia una direccion u
-     * otra una o dos posiciones
-     * 
-     * TODO: OJO con la pieza O
-     * @param {int} direccion direccion a donde va la pieza.
-     * 
-     * direccion = 1,2 -> horario 
-     * 
-     * direccion = -1,-2 -> contrahorario
-     */
-    wallKick(direction) {
-        // TODO: comprobar si basta con mover una vez a un lado o no.
-        this.movX(-direction);
-    }
-
-    /**
-     * Checks if in there's any colision on the horizontal axis 
-     * @param {*} direction The direction of the piece
-     */
-    _checkHorizontalBlockColision(direction) {
-
-        if (direction === 1) {
-            return this._rightColision();
-
-        } else if (direction === -1) {
-            return this._leftColision();
-
-        } else {
-            console.error("Las unicas direcciones son 1 o -1");
-        }
-    }
-
-    /**
-     * Checks if below there's a block
-     */
-    _checkVerticalBlockColision() {
-        let absPos;
-
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this[0].length; col++) {
-
-                if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                absPos = this._getAbsolutePosition(row, col);
-                if (this.board[absPos.row + 1][absPos.col]) return true; // ==== hay colisoion ====>>>
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if there's any colision with the game's walls
-     */
-    _checkWallColision(direction) {
-        let absPos;
-
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < 4; col++) {
-
-                if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                absPos = this._getAbsolutePosition(row, col);
-
-                if (((absPos.col + direction) < 0) || ((absPos.col + direction) > 9)) {
-
-                    return true; // ==== hay colisoion ====>>>
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Deletes the actual position of the matrix
      */
     _deletPosition() {
@@ -391,28 +346,6 @@ export default class Piece extends Array {
         }
     }
 
-    /**
-* Checks colision when the piece goes from right to left 
-*/
-    _leftColision() {
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this.length; col++) {
-
-                if (this[row][col] === 0) continue; // sigue con el bucle
-
-                let absPos = this._getAbsolutePosition(row, col);
-                let block = this.board[absPos.row][absPos.col - 1];
-
-                if (block) return true; // =====  hay un bloque ======>>
-
-                break;
-
-            }
-        }
-
-        return false; // ===== no hay un bucle ======>>
-    }
-
     _revertRotation(direction) {
         if ((direction === 1) || (direction === 2)) {
             this._reverseCols();
@@ -436,28 +369,6 @@ export default class Piece extends Array {
         this.forEach(arr => {
             arr.reverse();
         });
-    }
-
-    /**
-     * Checks colision when the piece goes from left to right 
-     */
-    _rightColision() {
-        for (let row = 0; row < this.length; row++) {
-            for (let col = this.length - 1; col >= 0; col--) {
-
-                if (this[row][col] === 0) continue; // sigue con el bucle
-
-                let absPos = this._getAbsolutePosition(row, col);
-                let block = this.board[absPos.row][absPos.col + 1];
-
-                if (block) return true; // =====  hay un bloque ======>>
-
-                break;
-
-            }
-        }
-
-        return false; // ===== no hay un bucle ======>>
     }
 
     /**
@@ -533,6 +444,42 @@ export default class Piece extends Array {
                     this[1][1]
                 ] = content;
         }
+    }
+
+    _testRotationColision(direction) {
+        if (direction === 1) {
+            this._transposeMatrix();
+            this._reverseCols();
+
+        } else if (direction === -1) {
+            this._reverseCols();
+            this._transposeMatrix();
+
+        } else {
+            console.error("A ver, a ver, HABER: los unicos valores son"
+                + "1 o -1");
+            return;
+        }
+
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this[0].length; col++) {
+                if (this[row][col] === 0) continue;
+
+                let absPos = this._getAbsolutePosition(row, col);
+
+                // comprueba si no esta vacio el espacio
+                if (this.board[absPos.row][absPos.col] !== 0) {
+                    return true;
+                }
+
+                // comprueba si hay o no una pared
+                if ((absPos.col < 0) || (absPos.col > 9) || (absPos.row > 19)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
