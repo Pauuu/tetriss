@@ -15,7 +15,7 @@ export default class Piece extends Array {
         this._selectPiece(pieceType);
 
         // pivote: X, Y
-        this.pivote = { col: 2, row: 0 };
+        this.pivote = { col: 4, row: 6 };
     }
 
     /**
@@ -26,7 +26,7 @@ export default class Piece extends Array {
         let absPos;        // tendra los valores absolutos del bloque
 
         for (let col = 3; col >= 0; col--) {
-            if (block) return true; //==== todos los bloques han sido testeados y ninguno ha chocado con nada ====>>>>
+            if (block) return true; //==== ningun bloque de la columna ha chocado con nada ====>>>>
 
             for (let row = 0; row < 4; row++) {
 
@@ -40,12 +40,29 @@ export default class Piece extends Array {
         }
     }
 
+    /**
+     * Devuelve true si la pieza puede rotar sin sobreponerse con ninguna pieza
+     * o salirse del tablero.
+     * 
+     * TODO: optimizar comprobaciones
+     * @param {*} direction La direccion a la que la puiza rotará
+     */
     checkRotationCollision(direction) {
+
+        // quita la posicion del tablero para comprobar las posiciones
         this._deletPosition();
-        let a = this._testRotationColision(direction);
+
+        // se comprueba si se puede rotar
+        let test = this._testRotationColision(direction);
+
+        // deshace la rotacion por si no se puede rotar
         this._revertRotation(direction);
 
-        return a;
+        // vuelve a dejar la ficha en el tablero
+        this._setBoardPosition();
+
+        // devuelve true si se puede rotar
+        return test;
     }
 
     /**
@@ -100,11 +117,39 @@ export default class Piece extends Array {
         return "alguien se ha comido todos los bloques y no ha puesto un mensaje de err descriptivo OwO";   //===== err =======>>>>
     }
 
+    _checkWallKick() {
+        let absPos;
+        let test = [1, 2, -1, -2];
+
+        loop1:
+        for (let i = 0; i < 4; i++) {
+
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+
+                    if (this[row][col] === 0) continue; //==== no bloque ====>>>
+
+                    // devuelve la posicion absoluta de los bloques
+                    absPos = this._getAbsolutePosition(row, col);
+
+                    if (this.board[absPos.row][absPos.col + test[i]] !== 0) continue loop1;
+                    // if ((absPos.col + test[i] < 0) || (absPos.col + test[i] > 19)) continue loop1;
+
+                }
+            }
+            return test[i];
+
+        }
+        return 0;
+    }
+
     /**
      * Draws the blocks of the piece
      */
     drawme() {
 
+
+        this.ctx.fillStyle = 'green';
         this.forEach((arr, rowIndex) => {
             arr.forEach((block, colIndex) => {
 
@@ -119,19 +164,44 @@ export default class Piece extends Array {
 
             });
         });
+
+        // pinta el area de la pieza
+        this.ctx.fillStyle = 'red';
+        for (let i = 0; i <= 4; i++) {
+
+            this.ctx.fillRect(
+                (this.pivote.col + i) * 40,
+                (this.pivote.row) * 40,
+                3,
+                40 * 4
+            );
+
+            this.ctx.fillRect(
+                (this.pivote.col) * 40,
+                (this.pivote.row + i) * 40,
+                40 * 4,
+                3
+            );
+
+
+        }
+        this.ctx.fillStyle = 'black';
+
     }
 
     /**
      * Rotates the piece clockwise
      */
-    rotate(direction) {
+    rotate(movement) {
         this._deletPosition();
 
-        if (direction === 1) {
+        this.pivote.col += movement.wallKickDirection;
+
+        if (movement.rotationDirection === 1) {
             this._transposeMatrix();
             this._reverseCols();
 
-        } else if (direction === -1) {
+        } else if (movement.rotationDirection === -1) {
             this._reverseCols();
             this._transposeMatrix();
         } else {
@@ -139,7 +209,7 @@ export default class Piece extends Array {
                 + "1 o -1");
             return;
         }
-        this._updateBoardPosition();
+        this._setBoardPosition();
     }
 
     /**
@@ -150,7 +220,7 @@ export default class Piece extends Array {
 
         this._deletPosition();
         this.pivote.col += direction;
-        this._updateBoardPosition();
+        this._setBoardPosition();
     }
 
     /**
@@ -160,13 +230,11 @@ export default class Piece extends Array {
 
         this._deletPosition();
         this.pivote.row++;
-        this._updateBoardPosition();
+        this._setBoardPosition();
     }
 
     /**
-     * Mueve la pieza para poder hacer un wallkick.
-     * Mira hacia donde ha rotado, y luego mueve la pieza hacia una direccion u
-     * otra una o dos posiciones
+     * Mueve la pieza hacia un lado para poder hacer un wallkick dependiendo de la direccion.
      * 
      * TODO: OJO con la pieza O
      * @param {int} direccion direccion a donde va la pieza.
@@ -193,7 +261,7 @@ export default class Piece extends Array {
         for (let row = 3; row >= 0; row--) {
 
             if (block) return false; // ==== se han comprobado todos los bloques de abajo ====>>>
-            for (let col = 0; col < 4; col ++){
+            for (let col = 0; col < 4; col++) {
 
                 if (this[row][col] === 0) continue;
 
@@ -203,107 +271,6 @@ export default class Piece extends Array {
                 if (absPos.row === 19) return true; //==== un bloque esta eb el fondo =====>>
             }
         }
-    }
-
-    /**
-     * Checks the wallKick.
-     * 
-     * 1 -> clockwise
-     * 
-     * -1 -> counter-clockwise
-     */
-    _checkWallKick(direction) {
-        // derecha
-        let absPos;
-        for (let row = 0; row < this.length; row++) {
-            for (let col = 0; col < this[0].length; col++) {
-
-                if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                absPos = this._getAbsolutePosition(row, col);
-            }
-        }
-
-        this._deletPosition();
-
-        if ((direction === 1) || (direction === 2)) {
-            this._transposeMatrix();
-            this._reverseCols();
-
-
-
-        } else if ((direction === -1) || (direction === -2)) {
-            this._reverseCols();
-            this._transposeMatrix();
-
-        } else {
-            console.error("A ver, a ver, HABER: los unicos valores son"
-                + "1 o -1");
-            return;
-        }
-
-        if ((direction === 1) || (direction === 2)) {
-
-            for (let row = 0; row < this.length; row++) {
-                for (let col = 0; col < this[0].length; col++) {
-
-                    if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                    absPos = this._getAbsolutePosition(row, col);
-
-                    console.log({
-                        resutladoResta:
-                            this.board[absPos.row][absPos.col - direction]
-                    });
-
-                    if ((this.board[absPos.row][absPos.col - direction]) !== 0) {
-
-                        if (direction === 1) {
-                            this._revertRotation(direction);
-                            return this._checkWallKick(2);
-                        }
-
-                        else {
-                            this._revertRotation(direction);
-                            return 0
-                        }
-                    }
-                }
-            }
-
-            this._revertRotation(direction);
-            return direction;
-        }
-
-        else {
-
-            for (let row = 0; row < this.length; row++) {
-                for (let col = 0; col < this[0].length; col++) {
-
-                    if (this[row][col] === 0) continue; //=== no bloque =>>>
-
-                    absPos = this._getAbsolutePosition(row, col);
-
-                    if ((absPos.col + direction) !== 0) {
-                        if (direction === -1) {
-
-                            this._revertRotation(direction);
-                            return this._checkWallKick(-2);
-                        } else {
-
-                            this._revertRotation(direction);
-                            return 0
-                        }
-                    }
-
-                    this._revertRotation(direction);
-                    return direction;
-                }
-            }
-        }
-
-        this._revertRotation(direction);
-        return 0;
     }
 
     /**
@@ -347,11 +314,11 @@ export default class Piece extends Array {
     }
 
     _revertRotation(direction) {
-        if ((direction === 1) || (direction === 2)) {
+        if ((direction === 1)) {
             this._reverseCols();
             this._transposeMatrix();
 
-        } else if ((direction === -1) || (direction === -2)) {
+        } else if ((direction === -1)) {
             this._transposeMatrix();
             this._reverseCols();
 
@@ -446,12 +413,20 @@ export default class Piece extends Array {
         }
     }
 
-    _testRotationColision(direction) {
-        if (direction === 1) {
+    /**
+     * Comprueba si algun bloque de la pieza choca con alguna otra pieza o queda fuera del tablero.
+     * Si la rotacion no es valida, se comprueba si con un wallKick la rotacion es valida.
+     * @param {} rDirection 
+     */
+    _testRotationColision(rDirection) {
+
+        let movement = { rotationDirection: 0, wallKickDirection: 0 };
+
+        if (rDirection === 1) {
             this._transposeMatrix();
             this._reverseCols();
 
-        } else if (direction === -1) {
+        } else if (rDirection === -1) {
             this._reverseCols();
             this._transposeMatrix();
 
@@ -461,25 +436,37 @@ export default class Piece extends Array {
             return;
         }
 
+
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
+
                 if (this[row][col] === 0) continue;
 
                 let absPos = this._getAbsolutePosition(row, col);
 
-                // comprueba si no esta vacio el espacio
-                if (this.board[absPos.row][absPos.col] !== 0) {
-                    return true;
-                }
+                // comprueba si hay una pared o el suelo mismo o comprueba si el espacio esta ocupado
+                if ((absPos.col < 0) ||
+                    (absPos.col > 9) ||
+                    (absPos.row > 19) ||
+                    (this.board[absPos.row][absPos.col] !== 0)
+                ) {
 
-                // comprueba si hay o no una pared
-                if ((absPos.col < 0) || (absPos.col > 9) || (absPos.row > 19)) {
-                    return true;
+                    let wkDirection = this._checkWallKick();
+
+                    if (wkDirection) {
+                        movement.rotationDirection = rDirection;
+                        movement.wallKickDirection = wkDirection;
+
+                        return movement;
+                    } else {
+
+                        return movement;
+                    }
                 }
             }
         }
-
-        return false;
+        movement.rotationDirection = rDirection;
+        return movement;
     }
 
     /**
@@ -497,7 +484,7 @@ export default class Piece extends Array {
     /**
      * Updates the positon of the piece inside the board
      */
-    _updateBoardPosition() {
+    _setBoardPosition() {
 
         this.forEach((arr, rowIndex) => {
             arr.forEach((block, colIndex) => {

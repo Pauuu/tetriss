@@ -18,6 +18,7 @@ export default class Board extends Array {
     */
     newPiece(pieceType) {
         this.pieces.push(new Piece(this, pieceType));
+        this.pieces[this.getCurrentPieceIndex]._setBoardPosition();
     }
 
     /**
@@ -27,6 +28,7 @@ export default class Board extends Array {
         this.ctx.clearRect(0, 0, 400, 800);
         this._drawCols();
         this._drawRows();
+        this.__drawPieces();
     }
 
     /**
@@ -60,6 +62,28 @@ export default class Board extends Array {
     }
 
     /**
+     * TODO: delete this method
+     */
+    __drawPieces() {
+        this.ctx.fillStyle = "#FF0000";
+
+        this.forEach((row, iRow) => {
+            row.forEach((col, iCol) => {
+
+                if (this[iRow][iCol] !== 0){
+                    this.ctx.fillRect(
+                        (iCol * 40),
+                        (iRow * 40),
+                        40,
+                        40);
+                    }
+            });
+        });
+
+        this.ctx.fillStyle = "#000000";
+    }
+
+    /**
     * Fills the array with other arrays inside
     * to create a bidimensional. The 0's represents
     * blank spaces.
@@ -81,7 +105,7 @@ export default class Board extends Array {
         return this.pieces;
     }
 
-    get getLastPieceIndex() {
+    get getCurrentPieceIndex() {
         return this.pieces.length - 1;
     }
 }

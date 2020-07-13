@@ -12,6 +12,7 @@ export default class {
     setUp(){
        
         this.newPiece(2);
+        
     }
 
     /**

@@ -10,14 +10,15 @@ let currTime = new Date().getTime();
 let snapTime = 0;
 let avgFps = 0;
 
-var __indicador__ = 0;
+var __caca__ = 0;
+var i = 0;
 
 /**
  * Main loop
  */
 ; (function () {
 
-    const time = 200;
+    const time = 1000;
 
     game.setUp();
 
@@ -36,15 +37,45 @@ var __indicador__ = 0;
  */
 function update() {
 
-
     let direction = 1;
+    let currentPiece = game.getBoard.getPieces[game.getBoard.getCurrentPieceIndex];
 
-    if (game.getBoard.getPieces[game.getBoard.getLastPieceIndex].checkVerticalColision()){
-        game.getBoard.getPieces[game.getBoard.getLastPieceIndex].movY();
-    } 
-    else {
-        game.newPiece(2);
+   
+    // comprueba si se puede girar la pieza como tal, si no se comprueba si se puede hacer un wallkick
+    // if (movement.rotationDirection) {
+    //     console.log("rotado " + i);
+
+    //     // gira la pieza
+    //     currentPiece.rotate(movement.rotationDirection, movement.wallKickDirection);
+
+    // }
+
+
+    if (__caca__ === 0) {
+        __caca__ = 1;
+
+        if (currentPiece.checkRightColision()) {
+            currentPiece.movX(direction);
+            console.log("movido en x " + i);
+        }
+
+    } else {
+        __caca__ = 0;
+
+        let movement = currentPiece.checkRotationCollision(direction);
+        console.log(movement);
+
+        // comprueb si se puede girar la pieza como tal, si no se comprueba si se puede hacer un wallkick
+        if (movement.rotationDirection) {
+            console.log("rotado " + i);
+
+            // gira la pieza
+            currentPiece.rotate(movement);
+
+        } 
     }
+
+    i++;
 }
 
 
