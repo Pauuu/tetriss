@@ -18,7 +18,7 @@ var i = 0;
  */
 ; (function () {
 
-    const time = 1000;
+    const time = 500;
 
     game.setUp();
 
@@ -54,15 +54,16 @@ function update() {
     if (__caca__ === 0) {
         __caca__ = 1;
 
-        if (currentPiece.checkRightColision()) {
-            currentPiece.movX(direction);
+        if (currentPiece.checkLeftColision()) {
+            currentPiece.movX(-direction);
             console.log("movido en x " + i);
         }
 
-    } else {
+    } 
+    else {
         __caca__ = 0;
 
-        let movement = currentPiece.checkRotationCollision(direction);
+        let movement = currentPiece.checkRotationCollision(-direction);
         console.log(movement);
 
         // comprueb si se puede girar la pieza como tal, si no se comprueba si se puede hacer un wallkick

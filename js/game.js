@@ -11,7 +11,7 @@ export default class {
      */
     setUp(){
        
-        this.newPiece(2);
+        this.newPiece(4);
         
     }
 

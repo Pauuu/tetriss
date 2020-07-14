@@ -26,7 +26,6 @@ export default class Piece extends Array {
         let absPos;        // tendra los valores absolutos del bloque
 
         for (let col = 3; col >= 0; col--) {
-            if (block) return true; //==== ningun bloque de la columna ha chocado con nada ====>>>>
 
             for (let row = 0; row < 4; row++) {
 
@@ -37,6 +36,8 @@ export default class Piece extends Array {
 
                 if (this.board[absPos.row][++absPos.col] !== 0) return false; //==== un bloque ha chocado con algo ====>>
             }
+
+            if (block) return true; //==== ningun bloque de la columna ha chocado con nada ====>>>>
         }
     }
 
@@ -72,18 +73,19 @@ export default class Piece extends Array {
         let block = false; // booleano que comprueba si hay un bloque en la columna
         let absPos;        // tendra los valores absolutos del bloque
 
-        for (let col = 0; col < 3; col++) {
-            if (block) return true; //==== todos los bloques han sido testeados y ninguno ha chocado con nada ====>>>>
+        for (let col = 0; col < 4; col++) {
 
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 4; row++) {
 
                 if (this[row][col] === 0) continue; //==== no hay bloque que comprobar ====>>> 
 
                 block = true;   //==== hay un bloque en la columna ====>>>>
                 absPos = this._getAbsolutePosition(row, col);
 
-                if (this.board[absPos.row][--absPos.col] !== 0) return false; //==== un bloque ha chocado con algo ====>>
+                if (this.board[absPos.row][absPos.col - 1] !== 0) return false; //==== un bloque ha chocado con algo ====>>
             }
+
+            if (block) return true; //==== todos los bloques han sido testeados y ninguno ha chocado con nada ====>>>>
         }
     }
 
@@ -165,26 +167,6 @@ export default class Piece extends Array {
             });
         });
 
-        // pinta el area de la pieza
-        this.ctx.fillStyle = 'red';
-        for (let i = 0; i <= 4; i++) {
-
-            this.ctx.fillRect(
-                (this.pivote.col + i) * 40,
-                (this.pivote.row) * 40,
-                3,
-                40 * 4
-            );
-
-            this.ctx.fillRect(
-                (this.pivote.col) * 40,
-                (this.pivote.row + i) * 40,
-                40 * 4,
-                3
-            );
-
-
-        }
         this.ctx.fillStyle = 'black';
 
     }

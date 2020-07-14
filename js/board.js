@@ -28,7 +28,6 @@ export default class Board extends Array {
         this.ctx.clearRect(0, 0, 400, 800);
         this._drawCols();
         this._drawRows();
-        this.__drawPieces();
     }
 
     /**
@@ -59,28 +58,6 @@ export default class Board extends Array {
         rowNum++;
         this.ctx.fillRect(0, rowNum * 40, 400, 1);
         this._drawRows(rowNum);
-    }
-
-    /**
-     * TODO: delete this method
-     */
-    __drawPieces() {
-        this.ctx.fillStyle = "#FF0000";
-
-        this.forEach((row, iRow) => {
-            row.forEach((col, iCol) => {
-
-                if (this[iRow][iCol] !== 0){
-                    this.ctx.fillRect(
-                        (iCol * 40),
-                        (iRow * 40),
-                        40,
-                        40);
-                    }
-            });
-        });
-
-        this.ctx.fillStyle = "#000000";
     }
 
     /**
