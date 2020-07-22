@@ -15,7 +15,7 @@ export default class Piece extends Array {
         this._selectPiece(pieceType);
 
         // pivote: X, Y
-        this.pivote = { col: 4, row: 6 };
+        this.pivote = { col: 4, row: 0 };
     }
 
     /**
@@ -103,8 +103,7 @@ export default class Piece extends Array {
         if (this._checkBottomColision()) return false;
 
         for (let row = 3; row >= 0; row--) {
-            if (block) return true; //==== hay algun bloque en la fila ====>>>>
-
+            
             for (let col = 0; col < 4; col++) {
 
                 if (this[row][col] === 0) continue; //==== no bloque ========>>>
@@ -114,6 +113,8 @@ export default class Piece extends Array {
 
                 if (this.board[absPos.row + 1][absPos.col] !== 0) return false; //==== abajo no hay un espacio libre
             }
+
+            if (block) return true; //==== hay algun bloque en la fila ====>>>>
         }
 
         return "alguien se ha comido todos los bloques y no ha puesto un mensaje de err descriptivo OwO";   //===== err =======>>>>
@@ -148,28 +149,28 @@ export default class Piece extends Array {
     /**
      * Draws the blocks of the piece
      */
-    drawme() {
+    // drawme() {
 
 
-        this.ctx.fillStyle = 'green';
-        this.forEach((arr, rowIndex) => {
-            arr.forEach((block, colIndex) => {
+    //     this.ctx.fillStyle = 'green';
+    //     this.forEach((arr, rowIndex) => {
+    //         arr.forEach((block, colIndex) => {
 
-                // si no hay bloque no pinta nada
-                if (block === 0) return; //=== no bloque =>>>
+    //             // si no hay bloque no pinta nada
+    //             if (block === 0) return; //=== no bloque =>>>
 
-                this.ctx.fillRect(
-                    (this.pivote.col + colIndex) * 40,
-                    (this.pivote.row + rowIndex) * 40,
-                    40,
-                    40);
+    //             this.ctx.fillRect(
+    //                 (this.pivote.col + colIndex) * 40,
+    //                 (this.pivote.row + rowIndex) * 40,
+    //                 40,
+    //                 40);
 
-            });
-        });
+    //         });
+    //     });
 
-        this.ctx.fillStyle = 'black';
+    //     this.ctx.fillStyle = 'black';
 
-    }
+    // }
 
     /**
      * Rotates the piece clockwise
@@ -418,7 +419,7 @@ export default class Piece extends Array {
             return;
         }
 
-
+        // checks if the piece rotated collides with the wall or another piece
         for (let row = 0; row < this.length; row++) {
             for (let col = 0; col < this[0].length; col++) {
 
@@ -426,10 +427,12 @@ export default class Piece extends Array {
 
                 let absPos = this._getAbsolutePosition(row, col);
 
+                if (absPos.row > 19) return movement;
+
                 // comprueba si hay una pared o el suelo mismo o comprueba si el espacio esta ocupado
                 if ((absPos.col < 0) ||
                     (absPos.col > 9) ||
-                    (absPos.row > 19) ||
+                    // (absPos.row > 19) ||// quitar?
                     (this.board[absPos.row][absPos.col] !== 0)
                 ) {
 

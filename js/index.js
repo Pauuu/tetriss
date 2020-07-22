@@ -10,8 +10,8 @@ let currTime = new Date().getTime();
 let snapTime = 0;
 let avgFps = 0;
 
-var __caca__ = 0;
-var i = 0;
+// pieza que actualmente esta cayendo
+let currentPiece;
 
 /**
  * Main loop
@@ -37,46 +37,17 @@ var i = 0;
  */
 function update() {
 
-    let direction = 1;
     let currentPiece = game.getBoard.getPieces[game.getBoard.getCurrentPieceIndex];
 
-   
-    // comprueba si se puede girar la pieza como tal, si no se comprueba si se puede hacer un wallkick
-    // if (movement.rotationDirection) {
-    //     console.log("rotado " + i);
-
-    //     // gira la pieza
-    //     currentPiece.rotate(movement.rotationDirection, movement.wallKickDirection);
-
-    // }
-
-
-    if (__caca__ === 0) {
-        __caca__ = 1;
-
-        if (currentPiece.checkLeftColision()) {
-            currentPiece.movX(-direction);
-            console.log("movido en x " + i);
-        }
-
+    if (currentPiece.checkVerticalColision()) {
+        currentPiece.movY();
     } 
     else {
-        __caca__ = 0;
-
-        let movement = currentPiece.checkRotationCollision(-direction);
-        console.log(movement);
-
-        // comprueb si se puede girar la pieza como tal, si no se comprueba si se puede hacer un wallkick
-        if (movement.rotationDirection) {
-            console.log("rotado " + i);
-
-            // gira la pieza
-            currentPiece.rotate(movement);
-
-        } 
+        game.getBoard.checkCompleteLines();
+        game.getBoard.newPiece(1);
     }
 
-    i++;
+
 }
 
 
@@ -86,7 +57,7 @@ function update() {
 function render() {
     showFPSaverage();
     game.getBoard.drawme();
-    game.getBoard.getPieces.forEach(piece => piece.drawme());
+    // game.getBoard.getPieces.forEach(piece => piece.drawme());
 }
 
 
