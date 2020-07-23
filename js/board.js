@@ -12,11 +12,6 @@ export default class Board extends Array {
         this.ctx = document.getElementById('myCanvas')
             .getContext('2d');
 
-        for (let i = 0; i < 10; i++) {
-            if (i === 4 || i === 5 || i === 6 || i === 7) continue;
-            this[19][i] = 1;
-            this[18][i] = 1;
-        }
     }
 
     /**
@@ -86,6 +81,14 @@ export default class Board extends Array {
     }
 
     /**
+     * Generates a nrw bag of pieces
+     */
+    generateBag() {
+       
+
+    }
+
+    /**
     * Creates a new piece
     */
     newPiece(pieceType) {
@@ -104,8 +107,6 @@ export default class Board extends Array {
 
         // index of the row to pull down
         let pullDownRowIndex;
-
-     
 
         for (let row = initialRow; row >= 0; row--) {
 

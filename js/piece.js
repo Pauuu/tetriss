@@ -102,20 +102,33 @@ export default class Piece extends Array {
         // comprueba si ha tocado el fondo del tablero
         if (this._checkBottomColision()) return false;
 
-        for (let row = 3; row >= 0; row--) {
-            
-            for (let col = 0; col < 4; col++) {
+        for (let col = 0; col < 4; col++) {
+            for (let row = 3; row >= 0; row--) {
+                if (this[row][col] === 0) continue;
 
-                if (this[row][col] === 0) continue; //==== no bloque ========>>>
-
-                block = true; //==== ha encontrado un bloque =====>>>>>
                 absPos = this._getAbsolutePosition(row, col);
 
-                if (this.board[absPos.row + 1][absPos.col] !== 0) return false; //==== abajo no hay un espacio libre
+                if (this.board[absPos.row + 1][absPos.col] !== 0) return false;
+                break;
             }
-
-            if (block) return true; //==== hay algun bloque en la fila ====>>>>
         }
+
+        return true;
+
+        // for (let row = 3; row >= 0; row--) {
+
+        //     for (let col = 0; col < 4; col++) {
+
+        //         if (this[row][col] === 0) continue; //==== no bloque ========>>>
+
+        //         block = true; //==== hemos encontrado un bloque=====>>>>>
+        //         absPos = this._getAbsolutePosition(row, col);
+
+        //         if (this.board[absPos.row + 1][absPos.col] !== 0) return false; //==== abajo no hay un espacio libre
+        //     }
+
+        //     if (block) return true; //==== hay espacio libre para la pieza ====>>>>
+        // }
 
         return "alguien se ha comido todos los bloques y no ha puesto un mensaje de err descriptivo OwO";   //===== err =======>>>>
     }
@@ -370,14 +383,6 @@ export default class Piece extends Array {
                     this[1][0]
                 ] = content;
 
-            case 5: // S piece
-                return [
-                    this[0][2],
-                    this[0][1],
-                    this[1][1],
-                    this[1][0]
-                ] = content;
-
             case 6: // O piece
                 return [
                     this[0][0],
@@ -386,7 +391,7 @@ export default class Piece extends Array {
                     this[1][1]
                 ] = content;
 
-            case 7: // S piece
+            case 7: // T piece
                 return [
                     this[0][0],
                     this[0][1],
@@ -485,6 +490,7 @@ export default class Piece extends Array {
 
     // getters & setters
 
+    
     /**
      * Returns an object with the absolute values of the piece's position
      * @param {*} relativeCol 

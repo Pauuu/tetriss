@@ -34,7 +34,7 @@ export default class {
                         currentPiece.movY();
                     }
                     break;
-                    
+
                 case 65:
                     rotation = currentPiece.checkRotationCollision(-1);
                     if (rotation.rotationDirection !== 0) {
@@ -55,8 +55,8 @@ export default class {
     /**
      * I think this ends the game or something...
      */
-    setUp() {
-        this.newPiece(1);
+    setUp(pieceIndex) {
+        this.newPiece(pieceIndex);
     }
 
     /**
@@ -71,7 +71,13 @@ export default class {
      * Generates a new bag of pieces already randomized
      */
     generateBag() {
+        let bag = [1, 2, 3, 4, 5, 6, 7];
 
+        // randomized the bag of pieces
+        bag.sort(() => Math.random() - 0.5);
+
+        // returns the bag randomized
+        return bag;
     }
 
     get getBoard() {

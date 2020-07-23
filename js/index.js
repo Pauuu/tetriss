@@ -4,11 +4,17 @@ var game = new Game();
 // fps para mostrar por pantalla
 let fps = document.getElementById("fps");
 
-// tiempo actual (que sorpresa eh...)
+// tiempo actual 
 let currTime = new Date().getTime();
 
 let snapTime = 0;
 let avgFps = 0;
+
+// cuantas piezas han caido
+let turn = 1;
+
+// generates a new bag of pieces
+let bag = game.generateBag();
 
 // pieza que actualmente esta cayendo
 let currentPiece;
@@ -20,7 +26,7 @@ let currentPiece;
 
     const time = 500;
 
-    game.setUp();
+    game.setUp(3);
 
     function main() {
         window.requestAnimationFrame(main);
@@ -38,18 +44,22 @@ let currentPiece;
 function update() {
 
     let currentPiece = game.getBoard.getPieces[game.getBoard.getCurrentPieceIndex];
+    
+    if (turn % 7 === 0) {
+        bag = game.generateBag();
+        console.table(bag);
+    }
 
     if (currentPiece.checkVerticalColision()) {
         currentPiece.movY();
-    } 
+    }
     else {
         game.getBoard.checkCompleteLines();
-        game.getBoard.newPiece(1);
+        game.getBoard.newPiece(7);
+        turn++;
     }
 
-
 }
-
 
 /**
  * Renders all the elements of the game
