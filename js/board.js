@@ -5,13 +5,19 @@ export default class Board extends Array {
         super(20);
         this._fillThis();
 
-        //Array of pieces
-        this.pieces = [];
+        // the piece that is currently falling down the board;
+        this.fallingPiece;
 
         // context of the HTML canvas
         this.ctx = document.getElementById('myCanvas')
             .getContext('2d');
 
+        this.img  = new Image();
+        this.img.src = "/home/pau/programacion/Tetris/assets/bVerde.png"
+
+        this.img.onload = function () { 
+          this.ctx.drawImage(this.img, 0, 0);
+        }
     }
 
     /**
@@ -53,7 +59,7 @@ export default class Board extends Array {
                 // clears the inital row
                 this.clearLine(row);
                 clearedRows++;
-            }
+            }    // il ]
         }
 
         if (initialRow !== -1) {
@@ -78,6 +84,7 @@ export default class Board extends Array {
         this._drawCols();
         this._drawRows();
         this._drawBlocks();
+        // this.ctx.drawImage(this.img, 10, 10);  
     }
 
     /**
@@ -85,15 +92,15 @@ export default class Board extends Array {
      */
     generateBag() {
        
-
     }
 
     /**
     * Creates a new piece
     */
     newPiece(pieceType) {
-        this.pieces.push(new Piece(this, pieceType));
-        this.pieces[this.getCurrentPieceIndex]._setBoardPosition();
+
+        this.fallingPiece = new Piece(this, pieceType);
+        this.fallingPiece.setBoardPosition();
     }
 
     /**
@@ -205,5 +212,9 @@ export default class Board extends Array {
 
     get getCurrentPieceIndex() {
         return this.pieces.length - 1;
+    }
+
+    get getFallingPiece(){
+        return this.fallingPiece;
     }
 }

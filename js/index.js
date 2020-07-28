@@ -11,7 +11,7 @@ let snapTime = 0;
 let avgFps = 0;
 
 // cuantas piezas han caido
-let turn = 1;
+let turn = 0;
 
 // generates a new bag of pieces
 let bag = game.generateBag();
@@ -26,7 +26,7 @@ let currentPiece;
 
     const time = 500;
 
-    game.setUp(3);
+    game.setUp(bag);
 
     function main() {
         window.requestAnimationFrame(main);
@@ -43,21 +43,34 @@ let currentPiece;
  */
 function update() {
 
-    let currentPiece = game.getBoard.getPieces[game.getBoard.getCurrentPieceIndex];
-    
-    if (turn % 7 === 0) {
-        bag = game.generateBag();
-        console.table(bag);
-    }
+    let currentPiece = game.getBoard.getFallingPiece;
 
+    /**
+     * checks if the piece is colliding with the ground or with another piece..
+     * If false: 
+     *      · checks if there're completed lines
+     *      · creates a new piece
+     *      · add 1 to tunrn variable
+     */
     if (currentPiece.checkVerticalColision()) {
         currentPiece.movY();
+        return;
     }
-    else {
-        game.getBoard.checkCompleteLines();
-        game.getBoard.newPiece(7);
-        turn++;
+
+    if ((turn % 7 === 0)) {
+        game.generateBag().forEach(pieceIndex => {
+            bag.push(pieceIndex);
+        });
+
+        console.log(bag);
     }
+
+    game.getBoard.checkCompleteLines();
+    game.getBoard.newPiece(bag[turn % 7]);
+    bag.shift();
+    console.log(bag);
+    turn++;
+
 
 }
 

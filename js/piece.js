@@ -60,7 +60,7 @@ export default class Piece extends Array {
         this._revertRotation(direction);
 
         // vuelve a dejar la ficha en el tablero
-        this._setBoardPosition();
+        this.setBoardPosition();
 
         // devuelve true si se puede rotar
         return test;
@@ -95,13 +95,11 @@ export default class Piece extends Array {
      * Returns true if there's colision; false if there's not
      */
     checkVerticalColision() {
-
-        let block = false;
         let absPos;
 
-        // comprueba si ha tocado el fondo del tablero
+        // comprueba si ha tocado el fondo del tablero  
         if (this._checkBottomColision()) return false;
-
+        //                                                      
         for (let col = 0; col < 4; col++) {
             for (let row = 3; row >= 0; row--) {
                 if (this[row][col] === 0) continue;
@@ -114,23 +112,6 @@ export default class Piece extends Array {
         }
 
         return true;
-
-        // for (let row = 3; row >= 0; row--) {
-
-        //     for (let col = 0; col < 4; col++) {
-
-        //         if (this[row][col] === 0) continue; //==== no bloque ========>>>
-
-        //         block = true; //==== hemos encontrado un bloque=====>>>>>
-        //         absPos = this._getAbsolutePosition(row, col);
-
-        //         if (this.board[absPos.row + 1][absPos.col] !== 0) return false; //==== abajo no hay un espacio libre
-        //     }
-
-        //     if (block) return true; //==== hay espacio libre para la pieza ====>>>>
-        // }
-
-        return "alguien se ha comido todos los bloques y no ha puesto un mensaje de err descriptivo OwO";   //===== err =======>>>>
     }
 
     _checkWallKick() {
@@ -160,32 +141,6 @@ export default class Piece extends Array {
     }
 
     /**
-     * Draws the blocks of the piece
-     */
-    // drawme() {
-
-
-    //     this.ctx.fillStyle = 'green';
-    //     this.forEach((arr, rowIndex) => {
-    //         arr.forEach((block, colIndex) => {
-
-    //             // si no hay bloque no pinta nada
-    //             if (block === 0) return; //=== no bloque =>>>
-
-    //             this.ctx.fillRect(
-    //                 (this.pivote.col + colIndex) * 40,
-    //                 (this.pivote.row + rowIndex) * 40,
-    //                 40,
-    //                 40);
-
-    //         });
-    //     });
-
-    //     this.ctx.fillStyle = 'black';
-
-    // }
-
-    /**
      * Rotates the piece clockwise
      */
     rotate(movement) {
@@ -205,8 +160,26 @@ export default class Piece extends Array {
                 + "1 o -1");
             return;
         }
-        this._setBoardPosition();
+        this.setBoardPosition();
     }
+
+    /**
+   * Updates the positon of the piece inside the board
+   */
+    setBoardPosition() {
+
+        this.forEach((arr, rowIndex) => {
+            arr.forEach((block, colIndex) => {
+
+                if (block === 0) return;
+
+                let absPos = this._getAbsolutePosition(rowIndex, colIndex);
+
+                this.board[absPos.row][absPos.col] = this.pieceType;
+            });
+        });
+    }
+
 
     /**
      * Moves the piece horizontally.
@@ -216,7 +189,7 @@ export default class Piece extends Array {
 
         this._deletPosition();
         this.pivote.col += direction;
-        this._setBoardPosition();
+        this.setBoardPosition();
     }
 
     /**
@@ -226,7 +199,7 @@ export default class Piece extends Array {
 
         this._deletPosition();
         this.pivote.row++;
-        this._setBoardPosition();
+        this.setBoardPosition();
     }
 
     /**
@@ -471,26 +444,10 @@ export default class Piece extends Array {
         }
     }
 
-    /**
-     * Updates the positon of the piece inside the board
-     */
-    _setBoardPosition() {
-
-        this.forEach((arr, rowIndex) => {
-            arr.forEach((block, colIndex) => {
-
-                if (block === 0) return;
-
-                let absPos = this._getAbsolutePosition(rowIndex, colIndex);
-
-                this.board[absPos.row][absPos.col] = this.pieceType;
-            });
-        });
-    }
 
     // getters & setters
 
-    
+
     /**
      * Returns an object with the absolute values of the piece's position
      * @param {*} relativeCol 

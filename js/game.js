@@ -13,7 +13,7 @@ export default class {
             let rotation;
 
             // returns the current piece
-            let currentPiece = this.board.getPieces[this.board.getCurrentPieceIndex];
+            let currentPiece = this.board.getFallingPiece;
 
             // TODO: añadir que se puedan usar los caracteres en mayúsculas
             switch (event.keyCode) {
@@ -53,18 +53,12 @@ export default class {
     }
 
     /**
-     * I think this ends the game or something...
+     * Generates a new Piece wich will be used by the player
+     * and sets the piece to the board
      */
-    setUp(pieceIndex) {
-        this.newPiece(pieceIndex);
-    }
-
-    /**
-     * Generates a new Piece which will be used by
-     * the player
-     */
-    newPiece(pieceType) {
-        this.board.newPiece(pieceType);
+    setUp(bag) {
+        bag = this.generateBag().slice();
+        this.board.newPiece(bag[0])
     }
 
     /**
