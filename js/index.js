@@ -10,28 +10,26 @@ let currTime = new Date().getTime();
 let snapTime = 0;
 let avgFps = 0;
 
-// cuantas piezas han caido
-let turn = 0;
-
-// generates a new bag of pieces
-let bag = game.generateBag();
-
-// pieza que actualmente esta cayendo
-let currentPiece;
-
 /**
  * Main loop
  */
 ; (function () {
 
-    const time = 500;
+    const time = 10;
 
-    game.setUp(bag);
+    game.setUp();
 
     function main() {
         window.requestAnimationFrame(main);
 
-        myTimer(time, update);
+        // myTimer(time, game.update);
+
+        let diffTime = new Date().getTime() - snapTime;
+
+        if (diffTime > time) {
+            snapTime = new Date().getTime();
+            game.update();
+        }
 
         render();
     }
@@ -42,7 +40,6 @@ let currentPiece;
  * Updates the elements of the game
  */
 function update() {
-
     let currentPiece = game.getBoard.getFallingPiece;
 
     /**
@@ -56,22 +53,23 @@ function update() {
         currentPiece.movY();
         return;
     }
+    console.log(bag);
+    console.log("antes : " + JSON.parse(JSON.stringify(bag)));
 
     if ((turn % 7 === 0)) {
         game.generateBag().forEach(pieceIndex => {
             bag.push(pieceIndex);
         });
-
-        console.log(bag);
     }
 
-    game.getBoard.checkCompleteLines();
-    game.getBoard.newPiece(bag[turn % 7]);
+    console.log("despues : " + JSON.parse(JSON.stringify(bag)));
+
+
     bag.shift();
-    console.log(bag);
+    game.getBoard.checkCompleteLines();
+    game.getBoard.newPiece(bag[0]);
+    console.log(bag[0]);
     turn++;
-
-
 }
 
 /**
@@ -98,7 +96,6 @@ function myTimer(time, func) {
         func();
     }
 }
-
 
 /**
  * Muestra los fos por la pantalla

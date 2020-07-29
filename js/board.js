@@ -110,8 +110,6 @@ export default class Board extends Array {
      */
     pullDownRows(initialRow, totalRows) {
 
-        console.log("holas que tal caca culo pedo pis");
-
         // index of the row to pull down
         let pullDownRowIndex;
 

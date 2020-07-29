@@ -4,6 +4,18 @@ export default class {
     constructor() {
         this.board = new Board();
         this.addUserEventListeners();
+
+        // generates a new bag of pieces
+        this.bag = [];
+
+        // cuantas piezas han caido
+        this.turn = 0;
+
+        // pieza que actualmente esta cayendo
+        this.currentPiece;
+
+        // lines cleared
+        this.clearedLines = 0;
     }
 
     addUserEventListeners() {
@@ -56,9 +68,10 @@ export default class {
      * Generates a new Piece wich will be used by the player
      * and sets the piece to the board
      */
-    setUp(bag) {
-        bag = this.generateBag().slice();
-        this.board.newPiece(bag[0])
+    setUp() {
+        this.bag = this.generateBag().slice();
+
+        this.board.newPiece(this.bag[0]);
     }
 
     /**
@@ -72,6 +85,34 @@ export default class {
 
         // returns the bag randomized
         return bag;
+    }
+
+    update() {
+        this.currentPiece = this.getBoard.getFallingPiece;
+
+        /**
+         * checks if the piece is colliding with the ground or with another piece..
+         * If false: 
+         *      · checks if there're completed lines
+         *      · creates a new piece
+         *      · add 1 to tunrn variable
+         */
+        if (this.currentPiece.checkVerticalColision()) {
+            this.currentPiece.movY();
+            return;
+        }
+
+        // adds new pieces to the bag
+        if ((this.turn % 7 === 0)) {
+            this.generateBag().forEach(pieceIndex => {
+                this.bag.push(pieceIndex);
+            });
+        }
+
+        this.bag.shift();
+        this.getBoard.checkCompleteLines();
+        this.getBoard.newPiece(this.bag[0]);
+        this.turn++;
     }
 
     get getBoard() {
