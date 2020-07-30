@@ -157,7 +157,7 @@ export default class Board extends Array {
     /**
      * draw all the pieces
      */
-    _drawBlocks() {
+    _drawBlocks() { 
 
         let block;
 
@@ -171,12 +171,6 @@ export default class Board extends Array {
                     this.ctx.drawImage(
                         document.getElementById("block"), 
                         iCol * 40, iRow * 40, 40, 40);
-
-                    // this.ctx.fillRect(
-                    //     iCol * 40,
-                    //     iRow * 40,
-                    //     40,
-                        // 40);
                 }
             });
         });
