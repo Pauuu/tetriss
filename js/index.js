@@ -15,7 +15,7 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 10;
+    const time = 200;
 
     game.setUp();
 

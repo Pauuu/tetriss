@@ -12,12 +12,12 @@ export default class Board extends Array {
         this.ctx = document.getElementById('myCanvas')
             .getContext('2d');
 
-        this.img  = new Image();
-        this.img.src = "/home/pau/programacion/Tetris/assets/bVerde.png"
+        // this.img  = new Image();
+        // this.img.src = "/home/pau/programacion/Tetris/assets/bVerde.png"
 
-        this.img.onload = function () { 
-          this.ctx.drawImage(this.img, 0, 0);
-        }
+        // this.img.onload = function () { 
+        //   this.ctx.drawImage(this.img, 0, 0);
+        // }
     }
 
     /**
@@ -26,43 +26,41 @@ export default class Board extends Array {
     checkCompleteLines() {
 
         // the total blocks on one row
-        let blocks;
+        let empty;
 
         // the total lines cleared
         let clearedRows = 0;
 
-        let initialRow = -1;
+        let initialRow = null;
 
         for (let row = 19; row >= 0; row--) {
 
-            blocks = 0;
+            empty = false;
 
             for (let col = 0; col < 10; col++) {
 
                 // breaks if the row has any space
-                if (this[row][col] === 0) break;
-
-                // add one more block
-                blocks++;
+                if (this[row][col] === 0) {
+                    
+                    // add one more block
+                    empty = true;
+                    break;
+                }
             }
 
             // if the current row is complete, it clears it
-            if (blocks === 10) {
-
-                console.debug({ initialRow: initialRow });
+            if (!empty) {
 
                 // sets the initial row if not already setted
-                if (initialRow === -1) initialRow = row;
-
-                console.debug({ initialRow2: initialRow });
+                if (initialRow === null) initialRow = row;
 
                 // clears the inital row
                 this.clearLine(row);
                 clearedRows++;
-            }    // il ]
+            }   
         }
 
-        if (initialRow !== -1) {
+        if (initialRow !== null) {
 
             this.pullDownRows(initialRow, clearedRows);
         }
@@ -91,7 +89,7 @@ export default class Board extends Array {
      * Generates a nrw bag of pieces
      */
     generateBag() {
-       
+
     }
 
     /**
@@ -170,11 +168,15 @@ export default class Board extends Array {
                 if (block !== 0) {
                     this.ctx.fillStyle = this._selectColor();
 
-                    this.ctx.fillRect(
-                        iCol * 40,
-                        iRow * 40,
-                        40,
-                        40);
+                    this.ctx.drawImage(
+                        document.getElementById("block"), 
+                        iCol * 40, iRow * 40, 40, 40);
+
+                    // this.ctx.fillRect(
+                    //     iCol * 40,
+                    //     iRow * 40,
+                    //     40,
+                        // 40);
                 }
             });
         });
@@ -212,7 +214,7 @@ export default class Board extends Array {
         return this.pieces.length - 1;
     }
 
-    get getFallingPiece(){
+    get getFallingPiece() {
         return this.fallingPiece;
     }
 }
