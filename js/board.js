@@ -41,7 +41,7 @@ export default class Board extends Array {
 
                 // breaks if the row has any space
                 if (this[row][col] === 0) {
-                    
+
                     // add one more block
                     empty = true;
                     break;
@@ -57,7 +57,7 @@ export default class Board extends Array {
                 // clears the inital row
                 this.clearLine(row);
                 clearedRows++;
-            }   
+            }
         }
 
         if (initialRow !== null) {
@@ -157,27 +157,35 @@ export default class Board extends Array {
     /**
      * draw all the pieces
      */
-    _drawBlocks() { 
+    _drawBlocks() {
 
-        let block;
+        let img;
+        let width = 40;
+        let height = 40;
+        let colPosition;
+        let rowPosition;
 
         this.forEach((row, iRow) => {
-            row.forEach((col, iCol) => {
-                block = this[iRow][iCol];
+            row.forEach((block, iCol) => {
 
                 if (block !== 0) {
-                    this.ctx.fillStyle = this._selectColor();
+
+                    img = this._selectColor(block);
+                    colPosition = iCol * 40;
+                    rowPosition = iRow * 40;
 
                     this.ctx.drawImage(
-                        document.getElementById("block"), 
-                        iCol * 40, iRow * 40, 40, 40);
+                        img,
+                        colPosition,
+                        rowPosition,
+                        width,
+                        height);
                 }
             });
         });
     }
 
-    // cuando no habian motos y cuando habian personas?
-    // 
+ 
     /**
     * Fills the array with other arrays inside
     * to create a bidimensional. The 0's represents
@@ -197,7 +205,40 @@ export default class Board extends Array {
     }
 
     _selectColor(pieceType) {
-        return "#123456";
+        let color;
+        switch (pieceType) {
+            case 1:
+                color = "amarillo";
+                break;
+
+            case 2:
+                color = "verde";
+                break;
+
+            case 3:
+                color = "crema";
+                break;
+
+            case 4:
+                color = "marron";
+                break;
+
+            case 5:
+                color = "naranja";
+                break;
+
+            case 6:
+                color = "polar";
+                break;
+
+            case 7:
+                color = "rojo";
+                break;
+
+            default:
+                break;
+        }
+        return document.getElementById(color);
     }
 
     get getPieces() {
