@@ -12,12 +12,12 @@ export default class Board extends Array {
         this.ctx = document.getElementById('myCanvas')
             .getContext('2d');
 
-        // this.img  = new Image();
-        // this.img.src = "/home/pau/programacion/Tetris/assets/bVerde.png"
+        // no hace nada
+        // this.imgs = [];
 
-        // this.img.onload = function () { 
-        //   this.ctx.drawImage(this.img, 0, 0);
-        // }
+        this.completedLines = 0;
+
+        // this._loadImages();
     }
 
     /**
@@ -57,6 +57,7 @@ export default class Board extends Array {
                 // clears the inital row
                 this.clearLine(row);
                 clearedRows++;
+                this.completedLines++;
             }
         }
 
@@ -83,13 +84,6 @@ export default class Board extends Array {
         this._drawRows();
         this._drawBlocks();
         // this.ctx.drawImage(this.img, 10, 10);  
-    }
-
-    /**
-     * Generates a nrw bag of pieces
-     */
-    generateBag() {
-
     }
 
     /**
@@ -170,22 +164,31 @@ export default class Board extends Array {
 
                 if (block !== 0) {
 
-                    img = this._selectColor(block);
+                    // img = this.imgs[block];
                     colPosition = iCol * 40;
                     rowPosition = iRow * 40;
 
-                    this.ctx.drawImage(
-                        img,
+                    // this.ctx.drawImage(
+                    //     this.imgs[block],
+                    //     colPosition,
+                    //     rowPosition,
+                    //     width,
+                    //     height);
+
+
+
+                    this.ctx.fillRect(
                         colPosition,
                         rowPosition,
                         width,
-                        height);
+                        height
+                    );
                 }
             });
         });
     }
 
- 
+
     /**
     * Fills the array with other arrays inside
     * to create a bidimensional. The 0's represents
@@ -204,7 +207,7 @@ export default class Board extends Array {
         }
     }
 
-    _selectColor(pieceType) {
+    _drawBlock(pieceType) {
         let color;
         switch (pieceType) {
             case 1:
@@ -238,7 +241,18 @@ export default class Board extends Array {
             default:
                 break;
         }
-        return document.getElementById(color);
+    }
+
+    _loadImages() {
+
+        this.imgs[0] = this.imgs.push(document.getElementById("amarillo"));
+        this.imgs[1] = this.imgs.push(document.getElementById("verde"));
+        this.imgs[2] = this.imgs.push(document.getElementById("crema"));
+        this.imgs[3] = this.imgs.push(document.getElementById("marron"));
+        this.imgs[4] = this.imgs.push(document.getElementById("naranja"));
+        this.imgs[5] = this.imgs.push(document.getElementById("polar"));
+        this.imgs[6] = this.imgs.push(document.getElementById("rojo"));
+
     }
 
     get getPieces() {
@@ -251,5 +265,9 @@ export default class Board extends Array {
 
     get getFallingPiece() {
         return this.fallingPiece;
+    }
+
+    get getCompletedLines(){
+        return this.completedLines;
     }
 }

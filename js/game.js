@@ -5,6 +5,9 @@ export default class {
         this.board = new Board();
         this.addUserEventListeners();
 
+        // boolean true if the game is over O.o
+        this.gameOver = false;
+
         // generates a new bag of pieces
         this.bag = [];
 
@@ -64,14 +67,12 @@ export default class {
         });
     }
 
-    /**
-     * Generates a new Piece wich will be used by the player
-     * and sets the piece to the board
-     */
-    setUp() {
-        this.bag = this.generateBag().slice();
-
-        this.board.newPiece(this.bag[0]);
+    // checks id the top of the board is full
+    checkGameOver() {
+        if (this.board[0][4] !== 0) {
+            this.gameOver = true;
+            console.log("!");
+        }    // the top is full
     }
 
     /**
@@ -87,6 +88,16 @@ export default class {
         return bag;
     }
 
+    /**
+     * Generates a new Piece wich will be used by the player
+     * and sets the piece to the board
+     */
+    setUp() {
+        this.bag = this.generateBag().slice();
+
+        this.board.newPiece(this.bag[0]);
+    }
+
     update() {
         this.currentPiece = this.getBoard.getFallingPiece;
 
@@ -99,24 +110,39 @@ export default class {
          */
         if (this.currentPiece.checkVerticalColision()) {
             this.currentPiece.movY();
-            return;
-        }
+            // return; // ====== the piece moves down one position ====>>>>>>>>>
 
-        // adds new pieces to the bag
-        if ((this.turn % 7 === 0)) {
-            this.generateBag().forEach(pieceIndex => {
-                this.bag.push(pieceIndex);
-            });
-        }
+        } else {
+            // adds new pieces to the bag every 7 turns
+            if (this.turn % 7 === 0) {
+                this._createNewPieces();
+            }
 
-        this.bag.shift();
-        this.getBoard.checkCompleteLines();
-        this.getBoard.newPiece(this.bag[0]);
-        this.turn++;
+            this.bag.shift();
+            this.getBoard.checkCompleteLines();
+            this.checkGameOver();
+
+            if (!this.gameOver) {
+                this.getBoard.newPiece(this.bag[0]);
+                this.turn++;
+            } else {
+                alert("caca");
+            }
+        }
+    }
+
+    _createNewPieces() {
+        this.generateBag().forEach(pieceIndex => {
+            this.bag.push(pieceIndex);
+        });
     }
 
     get getBoard() {
         return this.board;
+    }
+
+    get isGameOver() {
+        return this.gameOver;
     }
 
 }

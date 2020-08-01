@@ -4,10 +4,15 @@ var game = new Game();
 // fps para mostrar por pantalla
 let fps = document.getElementById("fps");
 
+// completed lines
+let completedLines = document.getElementById("completedLines");
+
+// boolean value that indicates if the game has ended or not
+
 // tiempo actual 
 let currTime = new Date().getTime();
 
-let snapTime = 0;
+let snapTime;
 let avgFps = 0;
 
 /**
@@ -15,9 +20,10 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 200;
+    const time = 1000;
 
     game.setUp();
+    snapTime = new Date().getTime();
 
     function main() {
         window.requestAnimationFrame(main);
@@ -27,8 +33,11 @@ let avgFps = 0;
         let diffTime = new Date().getTime() - snapTime;
 
         if (diffTime > time) {
-            snapTime = new Date().getTime();
-            game.update();
+           
+            if (!game.isGameOver) {
+                snapTime = new Date().getTime();
+                game.update();
+            }
         }
 
         render();
@@ -37,64 +46,14 @@ let avgFps = 0;
 })();
 
 /**
- * Updates the elements of the game
- */
-function update() {
-    let currentPiece = game.getBoard.getFallingPiece;
-
-    /**
-     * checks if the piece is colliding with the ground or with another piece..
-     * If false: 
-     *      · checks if there're completed lines
-     *      · creates a new piece
-     *      · add 1 to tunrn variable
-     */
-    if (currentPiece.checkVerticalColision()) {
-        currentPiece.movY();
-        return;
-    }
-    console.log(bag);
-    console.log("antes : " + JSON.parse(JSON.stringify(bag)));
-
-    if ((turn % 7 === 0)) {
-        game.generateBag().forEach(pieceIndex => {
-            bag.push(pieceIndex);
-        });
-    }
-
-    console.log("despues : " + JSON.parse(JSON.stringify(bag)));
-
-
-    bag.shift();
-    game.getBoard.checkCompleteLines();
-    game.getBoard.newPiece(bag[0]);
-    console.log(bag[0]);
-    turn++;
-}
-
-/**
  * Renders all the elements of the game
  */
 function render() {
     showFPSaverage();
+    showCompletedLines();
     game.getBoard.drawme();
+
     // game.getBoard.getPieces.forEach(piece => piece.drawme());
-}
-
-
-/**
- * Executes a function of this file if specified time has passed between calls
- * @param {*} time time to pass
- * @param {*} func function to execute
- */
-function myTimer(time, func) {
-
-    let diffTime = new Date().getTime() - snapTime;
-
-    if (diffTime > time) {
-        snapTime = new Date().getTime();
-        func();
-    }
 }
 
 /**
@@ -109,5 +68,9 @@ function showFPSaverage() {
         currTime = new Date().getTime();
         avgFps = 0;
     }
+}
+
+function showCompletedLines() {
+    completedLines.innerHTML = game.getBoard.getCompletedLines;
 }
 
