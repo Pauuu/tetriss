@@ -20,40 +20,40 @@ let avgFps = 0;
  */
 ; (function () {
 
-    const time = 1000;
+  const time = 1000;
 
-    game.setUp();
-    snapTime = new Date().getTime();
+  game.setUp();
+  snapTime = new Date().getTime();
 
-    function main() {
-        window.requestAnimationFrame(main);
+  function main() {
+    window.requestAnimationFrame(main);
 
-        // myTimer(time, game.update);
+    // myTimer(time, game.update);
 
-        let diffTime = new Date().getTime() - snapTime;
+    let diffTime = new Date().getTime() - snapTime;
 
-        if (diffTime > time) {
-           
-            if (!game.isGameOver) {
-                snapTime = new Date().getTime();
-                game.update();
-            }
-        }
+    if (diffTime > time) {
 
-        render();
+      if (!game.isGameOver) {
+        snapTime = new Date().getTime();
+        game.update();
+      }
     }
-    main(); // Start the cycle
+
+    render();
+  }
+  main(); // Start the cycle
 })();
 
 /**
  * Renders all the elements of the game
  */
 function render() {
-    showFPSaverage();
-    showCompletedLines();
-    game.getBoard.drawme();
+  showFPSaverage();
+  showCompletedLines();
+  game.getBoard.drawme();
 
-    // game.getBoard.getPieces.forEach(piece => piece.drawme());
+  // game.getBoard.getPieces.forEach(piece => piece.drawme());
 }
 
 /**
@@ -61,16 +61,16 @@ function render() {
  */
 function showFPSaverage() {
 
-    avgFps++;
+  avgFps++;
 
-    if (new Date().getTime() - currTime >= 1000) {
-        fps.innerHTML = avgFps;
-        currTime = new Date().getTime();
-        avgFps = 0;
-    }
+  if (new Date().getTime() - currTime >= 1000) {
+    fps.innerHTML = avgFps;
+    currTime = new Date().getTime();
+    avgFps = 0;
+  }
 }
 
 function showCompletedLines() {
-    completedLines.innerHTML = game.getBoard.getCompletedLines;
+  completedLines.innerHTML = game.getBoard.getCompletedLines;
 }
 
