@@ -98,19 +98,10 @@ export default class Board extends Array {
    */
   pullDownRows(initialRow, totalRows) {
 
-    // index of the row to pull down
-    let pullDownRowIndex;
-
     for (let row = initialRow; row >= 0; row--) {
 
-      // pullDownRowIndex = row - totalRows;
-
-      // if (pullDownRowIndex < 0) break;
       if (row < totalRows) break;
       this[row] = this[row - totalRows].slice();
-
-      // hace lo mismo que lo de arriba?
-      // this[row] = [...this[row - totalRows]];  
     }
   }
 
@@ -149,7 +140,6 @@ export default class Board extends Array {
    */
   _drawBlocks() {
 
-    let img;
     let width = 40;
     let height = 40;
     let colPosition;
@@ -160,25 +150,17 @@ export default class Board extends Array {
 
         if (block !== 0) {
 
-          // img = this.imgs[block];
           colPosition = iCol * 40;
           rowPosition = iRow * 40;
 
-          // this.ctx.drawImage(
-          //     this.imgs[block],
-          //     colPosition,
-          //     rowPosition,
-          //     width,
-          //     height);
-
-
-
+          this.ctx.fillStyle = this._selectPieceColor(block);
           this.ctx.fillRect(
             colPosition,
             rowPosition,
             width,
             height
           );
+          this.ctx.fillStyle = "black"
         }
       });
     });
@@ -203,35 +185,35 @@ export default class Board extends Array {
     }
   }
 
-  _drawBlock(pieceType) {
-    let color;
+  _selectPieceColor(pieceType) {
+    // let color;
     switch (pieceType) {
       case 1:
-        color = "amarillo";
+        return "yellow";
         break;
 
       case 2:
-        color = "verde";
+        return "green";
         break;
 
       case 3:
-        color = "crema";
+        return "HotPink";
         break;
 
       case 4:
-        color = "marron";
+        return "brown";
         break;
 
       case 5:
-        color = "naranja";
+        return "orange";
         break;
 
       case 6:
-        color = "polar";
+        return "blue";
         break;
 
       case 7:
-        color = "rojo";
+        return "red";
         break;
 
       default:
