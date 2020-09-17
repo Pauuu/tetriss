@@ -2,107 +2,59 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="index.css">
-    <script defer type="module" src="./js/index.js"></script>
-    <title>UwU</title>
-
-    <style>
-        body {
-            background-color: lightblue;
-        }
-
-        div {
-            margin: 10px;
-        }
-
-        .login {
-            display: none;
-
-            position: fixed;
-            top: 45%;
-            right: 45%;
-
-            border-style: solid;
-            border-width: 5px;
-            border-color: blue;
-
-            padding: 30px;
-        }
-
-        #bloques {
-            background-color: fuchsia;
-            width: 20%;
-        }
-
-        #myCanvas {
-            /*background-color: aquamarine;*/
-            border: 1px solid red;
-        }
-
-        #header {
-            background-color: tomato;
-            padding: 10px;
-        }
-
-        #puntuacion {
-            background-color: chartreuse;
-            width: 20%
-        }
-
-        #zona-juego {
-            background-color: blanchedalmond;
-            display: flex;
-            justify-content: center;
-            height: 53em;
-            /*revisar*/
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <script defer type="module" src="./js/index.js"></script>
+  <title>UwU</title>
 </head>
 
 <body>
-    <!--no se mostrara en el jeugo, es solo un test-->
-    <div class="login">
-        <p>user input</p>
-        <p>user password</p>
-    </div>
-
+  <!--no se mostrara en el jeugo, es solo un test-->
+  <div class="login">
+    <p>user input</p>
+    <p>user password</p>
+  </div>
+  <div id="test">
+    
     <div id="header">
-        header //
-        average fps: <b id="fps"></b>
+      header //
+      average fps: <b id="fps"></b>
     </div>
 
-    <div id="zona-juego">
+  </div>
 
-        <div id="puntuacion">
-            puntuacion: <b id="completedLines"></b>
-        </div>
+  <div id="zona-juego">
 
-        <div id="divCanvas">
-            <canvas id="myCanvas" width="400" height="800">
-                
-            </canvas>
-        </div>
+    <div id="puntuacion">
+      Pts:
+      <br>
+      <b id="completedLines"></b>
+    </div>
+
+    <div id="divCanvas">
+      <canvas id="myCanvas" width="400" height="800">
+
+      </canvas>
+    </div>
 
 
-        <div id="bloques">
-            <p>bloques</p>
-            <p id="blockPanel"></p>
-        </div>
-
-        <!--quitar-->
-        <div style="display: none;">
-            <img id="amarillo" src="assets/amarillo.png" alt="caca" srcset="assets/amarillo.png">
-            <img id="verde" src="assets/bVerde.png" alt="caca" srcset="assets/bVerde.png">
-            <img id="crema" src="assets/crema.png" alt="caca" srcset="assets/crema.png">
-            <img id="marron" src="assets/marron.png" alt="caca" srcset="assets/marron.png">
-            <img id="naranja" src="assets/naranja.png" alt="caca" srcset="assets/naranjapng">
-            <img id="polar" src="assets/polar.png" alt="caca" srcset="assets/polar.png">
-            <img id="rojo" src="assets/rojo.png" alt="caca" srcset="assets/rojo.png">
-        </div>
+    <div id="bloques">
 
     </div>
+
+    <!--quitar-->
+    <div style="display: none;">
+      <img id="amarillo" src="assets/amarillo.png" alt="caca" srcset="assets/amarillo.png">
+      <img id="verde" src="assets/bVerde.png" alt="caca" srcset="assets/bVerde.png">
+      <img id="crema" src="assets/crema.png" alt="caca" srcset="assets/crema.png">
+      <img id="marron" src="assets/marron.png" alt="caca" srcset="assets/marron.png">
+      <img id="naranja" src="assets/naranja.png" alt="caca" srcset="assets/naranjapng">
+      <img id="polar" src="assets/polar.png" alt="caca" srcset="assets/polar.png">
+      <img id="rojo" src="assets/rojo.png" alt="caca" srcset="assets/rojo.png">
+    </div>
+
+  </div>
 
 
 </body>

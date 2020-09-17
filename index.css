@@ -1,1 +1,67 @@
 /* mover todo el codigo del .html al .css */
+
+body {
+  background-color: #22c1c3;
+}
+
+div {
+  margin: 10px;
+}
+
+.login {
+  display: none;
+  position: fixed;
+  top: 45%;
+  right: 45%;
+  border-style: solid;
+  border-width: 5px;
+  border-color: blue;
+  padding: 30px;
+}
+
+#bloques {
+  background-color: fuchsia;
+  width: 6em;
+  height: 800px;
+}
+
+#blockPanel {
+  background-color: chocolate
+}
+
+#myCanvas {
+  /*background-color: aquamarine;*/
+  border: 1px solid red;
+  background-color: grey;
+}
+
+#test{
+  display: grid;
+  justify-content: center;
+}
+
+#header {
+  background-color: tomato;
+  padding: 10px;
+  width: calc(12em + 400px + 20px);
+  display: flex;
+  justify-content: center;
+  
+}
+
+#puntuacion {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 1.5em;
+  text-align: center;
+  background-color: chartreuse;
+  width: 6em;
+  height: 800px;
+}
+
+#zona-juego {
+  /* background-color: blanchedalmond; */
+  display: flex;
+  justify-content: center;
+  height: 53em;
+  /*revisar*/
+}

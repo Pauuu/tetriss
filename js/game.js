@@ -1,11 +1,8 @@
 import Board from "./board.js";
-import BlockView from "./blockView.js";
 
 export default class {
   constructor() {
     this.board = new Board(this);
-    this.blockView = new BlockView(this);
-
     this.addUserEventListeners();
 
     // boolean true if the game is over O.o
@@ -22,7 +19,6 @@ export default class {
 
     // lines cleared
     this.clearedLines = 0;
-
   }
 
   addUserEventListeners() {
@@ -100,12 +96,10 @@ export default class {
     this.bag = this.generateBag().slice();
 
     this.board.newPiece(this.bag[0]);
-    this.blockView.displayBlocks();
 
   }
 
   update() {
-    this.blockView.displayBlocks();
     this.currentPiece = this.getBoard.getFallingPiece;
 
 
@@ -127,6 +121,7 @@ export default class {
       }
 
       this.bag.shift();
+
       this.getBoard.checkCompleteLines();
       this.checkGameOver();
 
@@ -134,7 +129,7 @@ export default class {
         this.getBoard.newPiece(this.bag[0]);
         this.turn++;
       } else {
-        alert("caca");
+        alert("has periddo!");
       }
     }
   }
