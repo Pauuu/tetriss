@@ -1,6 +1,6 @@
 **WIP**
 
-** Git CDN**
+**Git CDN**
 https://gitcdn.xyz/repo/Pauuu/tetriss/master/index.html
 
 TODO:
