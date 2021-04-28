@@ -5,42 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="index.css">
+  <script defer type="module" src="./js/gameLogic/index.js"></script>
   <script defer type="module" src="./js/index.js"></script>
   <title>UwU</title>
 </head>
 
 <body>
-  <!--no se mostrara en el jeugo, es solo un test-->
-  <div class="login">
-    <p>user input</p>
-    <p>user password</p>
-  </div>
-  <div id="test">
-    
-    <div id="header">
-      header //
-      average fps: <b id="fps"></b>
+  <header>
+    <div id="puntuacion">
+      Pts: <b id="completedLines"></b>
     </div>
 
-  </div>
+    <button>
+      login
+    </button>
+
+  </header>
 
   <div id="zona-juego">
-
-    <div id="puntuacion">
-      Pts:
-      <br>
-      <b id="completedLines"></b>
-    </div>
-
     <div id="divCanvas">
-      <canvas id="myCanvas" width="400" height="800">
-
-      </canvas>
-    </div>
-
-
-    <div id="bloques">
-
+      <canvas id="myCanvas" width="400" height="800"></canvas>
     </div>
 
     <!--quitar-->
@@ -55,7 +39,6 @@
     </div>
 
   </div>
-
 
 </body>
 

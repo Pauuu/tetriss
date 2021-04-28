@@ -1,12 +1,23 @@
 {
   "name": "tetris",
   "version": "1.0.0",
-  "description": "",
+  "description": "**WIP**",
   "main": "index.js",
   "scripts": {
     "serve": "lite-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pauuu/tetriss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pauuu/tetriss/issues"
+  },
+  "homepage": "https://github.com/Pauuu/tetriss#readme",
+  "dependencies": {
+    "lite-server": "^2.6.1"
+  }
 }
