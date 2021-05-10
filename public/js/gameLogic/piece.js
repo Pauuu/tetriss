@@ -444,9 +444,7 @@ export default class Piece extends Array {
         }
     }
 
-
     // getters & setters
-
 
     /**
      * Returns an object with the absolute values of the piece's position

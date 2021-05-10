@@ -7,24 +7,50 @@
 
   <link rel="stylesheet" type="text/css" href="./index.css">
   <title>UwU</title>
-  
-  <script defer src="./js/gameLogic/index.js"></script>
-  <script defer src="./js/index.js"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-auth.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+    apiKey: "AIzaSyCOqSpnve3IEyy5i-INUvD13gGAQjJZS0w",
+    authDomain: "tetriss-ea563.firebaseapp.com",
+    projectId: "tetriss-ea563",
+    storageBucket: "tetriss-ea563.appspot.com",
+    messagingSenderId: "832355428089",
+    appId: "1:832355428089:web:94205d660fae9e21892428"
+  };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script defer type="module" src="./js/gameLogic/index.js"></script>
+  <script defer src="./index.js"></script>
 
 </head>
 
 <body>
+
   <header>
     <div id="puntuacion">
       Pts: <b id="completedLines"></b>
     </div>
 
-    <button id="signInBtn">
-      login
-    </button>
-    <button id="signOutBtn">
-      Log out
-    </button>
+    <section id="signedOut">
+      <button id="signInBtn">Sign In</button>
+    </section>
+
+    <section id="signedIn" hidden="true">
+      <div id="userDetails"></div>
+      <button id="signOutBtn">Sign Out</button>
+    </section>
 
   </header>
 

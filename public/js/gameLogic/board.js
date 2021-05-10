@@ -142,24 +142,45 @@ export default class Board extends Array {
 
     let width = 40;
     let height = 40;
+    let colors;
     let colPosition;
     let rowPosition;
+    let color1;
+    let color2;
 
     this.forEach((row, iRow) => {
       row.forEach((block, iCol) => {
 
         if (block !== 0) {
 
+          console.log(block);
+
           colPosition = iCol * 40;
           rowPosition = iRow * 40;
+          colors = this._selectPieceColor(block);
+          // this.ctx.fillStyle = this._selectPieceColor(block);
 
-          this.ctx.fillStyle = this._selectPieceColor(block);
+          color1 = colors.color1;
+          color2 = colors.color2;
+
+          // pq no se pinta con el gradiente
+          let grd = this.ctx.createLinearGradient(
+            colPosition,
+            rowPosition,
+            colPosition + 40,
+            rowPosition + 40);
+          grd.addColorStop(0, color1);
+          grd.addColorStop(1, color2);
+
+          this.ctx.fillStyle = grd;
           this.ctx.fillRect(
             colPosition,
             rowPosition,
             width,
             height
           );
+
+          // para el grid
           this.ctx.fillStyle = "black"
         }
       });
@@ -189,32 +210,46 @@ export default class Board extends Array {
     // let color;
     switch (pieceType) {
       case 1:
-        return "yellow";
-        break;
+        return {
+          color1: "red",
+          color2: "yellow"
+        };
 
       case 2:
-        return "green";
-        break;
+        return {
+          color1: "HotPink",
+          color2: "Blue"
+        };;
 
       case 3:
-        return "HotPink";
-        break;
+        return {
+          color1: "Brown",
+          color2: "White"
+        };;
 
       case 4:
-        return "brown";
-        break;
+        return {
+          color1: "orange",
+          color2: "green"
+        };;
 
       case 5:
-        return "orange";
-        break;
+        return {
+          color1: "blue",
+          color2: "black"
+        };
 
       case 6:
-        return "blue";
-        break;
+        return {
+          color1: "#FF7F50", // Coral
+          color2: "#E7A1B0" //Pink rose
+        };
 
       case 7:
-        return "red";
-        break;
+        return {
+          color1: "#C12267", //Burnt Pink
+          color2: "#C11B17"  // chilly pepper 
+        };
 
       default:
         break;

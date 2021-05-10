@@ -1,8 +1,8 @@
 const auth = firebase.auth();
 
 const provider = new firebase.auth.GoogleAuthProvider();
-const singInBtn = document.getElementById("signInBtn");
-const singOutBtn = document.getElementById("singOutBtn");
+const signInBtn = document.getElementById("signInBtn");
+const signOutBtn = document.getElementById("signOutBtn");
 
 signInBtn.onclick = () => auth.signInWithRedirect(provider);
 
