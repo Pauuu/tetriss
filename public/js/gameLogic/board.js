@@ -242,7 +242,7 @@ export default class Board extends Array {
       case 6:
         return {
           color1: "#FF7F50", // Coral
-          color2: "#E7A1B0" //Pink rose
+          color2: "#E7A1B0" // Pink rose
         };
 
       case 7:
