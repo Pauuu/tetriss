@@ -1,22 +1,25 @@
-const auth = firebase.auth();
+// import Main from "./gameLogic/index.js"
 
-const provider = new firebase.auth.GoogleAuthProvider();
-const signInBtn = document.getElementById("signInBtn");
-const signOutBtn = document.getElementById("signOutBtn");
+// const auth = firebase.auth();
 
-signInBtn.onclick = () => auth.signInWithRedirect(provider);
+// const provider = new firebase.auth.GoogleAuthProvider();
+// const signInBtn = document.getElementById("signInBtn");
+// const signOutBtn = document.getElementById("signOutBtn");
 
-signOutBtn.onclick = () => auth.signOut();
+// signInBtn.onclick = () => auth.signInWithRedirect(provider);
 
-auth.onAuthStateChanged(user => {
-    if (user) {
-        signedIn.hidden = false;
-        signedOut.hidden = true;
-        userDetails.innerHTML = `<h3> Hola ${user.displayName}!`;
+// signOutBtn.onclick = () => auth.signOut();
+
+// auth.onAuthStateChanged(user => {
+//     if (user) {
+//         signedIn.hidden = false;
+//         signedOut.hidden = true;
+//         userDetails.innerHTML = `<h3> Hola ${user.displayName}!`;
+
     
-    } else {
-        signedIn.hidden = true;
-        signedOut.hidden = false;
-        userDetails.innerHTML = `¿Quien eres?`;
-    }
-});
+//     } else {
+//         signedIn.hidden = true;
+//         signedOut.hidden = false;
+//         userDetails.innerHTML = `¿Quien eres?`;
+//     }
+// });

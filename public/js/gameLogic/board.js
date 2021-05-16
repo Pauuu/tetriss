@@ -153,8 +153,6 @@ export default class Board extends Array {
 
         if (block !== 0) {
 
-          console.log(block);
-
           colPosition = iCol * 40;
           rowPosition = iRow * 40;
           colors = this._selectPieceColor(block);
@@ -231,7 +229,7 @@ export default class Board extends Array {
         return {
           color1: "orange",
           color2: "green"
-        };;
+        };
 
       case 5:
         return {
