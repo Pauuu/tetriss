@@ -1,6 +1,6 @@
 **Link  + Screenshot**
 ---
-https://tetriss-ea563.firebaseapp.com
+[<h3>LINK TO GAME!!!<h3>](https://tetriss-ea563.firebaseapp.com)
 
 ![tetriss](https://user-images.githubusercontent.com/29251149/120534206-dc89ac00-c3e1-11eb-9c23-3bdcbdc1253f.png)
 
@@ -37,7 +37,7 @@ Todo tipo de feedback es bienvenido!
 * Right & left arrow: moves the piece right and left.
 * Bottom arrow: moves the piece one position down.
 * 'A' & 'D' keys: rotates the pieces to the right or to the left.
-*
+
 **What is this and why**
 This is my first personal project. It's a Teris-like game.
 I started this project in order to practice JS (apart from JAVA) and some CSS + HTML in my spare time while I was studying.
