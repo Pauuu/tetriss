@@ -1,6 +1,7 @@
 /* mover todo el codigo del .html al .css */
 
-html, body {
+html,
+body {
   margin: 0;
   width: 100%;
 }
@@ -15,20 +16,38 @@ header {
   background-color: chartreuse;
   display: flex;
   justify-content: space-evenly;
+  padding: 8px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+
+  box-shadow: 0 5px hsl(192, 60%, 69%);
+  /* /* border-bottom: 5px solid hsl(192, 60%, 69%); */
+  background-color: white;
+}
+
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px hsl(192, 60%, 69%);
+
 }
 
 #blockPanel {
-  background-color: chocolate
+  background-color: chocolate;
 }
 
 #myCanvas {
   background-color: grey;
 }
 
-
 #puntuacion {
-
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   font-size: 1.5em;
   text-align: center;
 }
