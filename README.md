@@ -25,10 +25,13 @@ Podría seguir mejorando el juego, pero prefiero centrarme en otros proyectos; a
 
 **Notas**
 ---
-Todo tipo de feedback es bienvenido
+Todo tipo de feedback es bienvenido!
 
 
-///////////// English /////////////
+---
+
+<> English <>
+---
 
 **How to play**
 * Right & left arrow: moves the piece right and left.
@@ -49,4 +52,4 @@ I could keep improving this game, but I prefer to focus in new projects now and 
 
 **Notes**
 ---
-All feedback (including English misspellings :P) are welcome.
+All feedback (including English misspellings :P) is welcome!
